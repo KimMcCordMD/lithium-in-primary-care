@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithium — NNT by Indication v2</title>
+<style>
+:root {
+  --li: #1D9E75;
+  --li-light: rgba(29,158,117,0.10);
+  --li-mid: rgba(29,158,117,0.30);
+  --bp: #5A9FE0;
+  --bp-light: rgba(90,159,224,0.10);
+  --uni: #D85A30;
+  --uni-light: rgba(216,90,48,0.10);
+  --warn: #BA7517;
+  --warn-light: rgba(186,117,23,0.10);
+  --muted: #5a5c66;
+  --border: rgba(0,0,0,0.09);
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --text: #1a1c22;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; background: var(--bg); color: var(--text); padding: 0; }
+.slide { max-width: 1060px; margin: 0 auto; padding: 26px 30px 18px; }
+
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+.title-block h1 { font-size: 21px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
+.title-block .sub { font-size: 12px; color: var(--muted); margin-top: 3px; font-style: italic; }
+.version-badge { font-family: 'Helvetica Neue', sans-serif; font-size: 9.5px; background: var(--li); color: #fff; padding: 5px 9px; border-radius: 4px; line-height: 1.55; text-align: right; flex-shrink: 0; white-space: nowrap; }
+.divider { height: 1px; background: var(--border); margin: 9px 0 14px; }
+
+.section-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.section-label { font-family: 'Helvetica Neue', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 0 2px; margin-bottom: 5px; }
+.lbl-bp { color: var(--bp); }
+.lbl-uni { color: var(--uni); }
+
+.ind-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 13px 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.nnt-badge { flex-shrink: 0; width: 68px; text-align: center; }
+.nnt-num { font-size: 34px; font-weight: 700; line-height: 1; }
+.nnt-label { font-family: 'Helvetica Neue', sans-serif; font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 2px; }
+.nnt-ci { font-family: 'Helvetica Neue', sans-serif; font-size: 10px; color: var(--muted); margin-top: 3px; }
+.col-bp .nnt-num { color: var(--bp); }
+.col-uni .nnt-num { color: var(--uni); }
+.col-li .nnt-num { color: var(--li); }
+
+.bar-vis { width: 60px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 2px; }
+.bar-pair { width: 100%; display: flex; gap: 4px; align-items: flex-end; height: 36px; }
+.bar-col { flex: 1; border-radius: 2px 2px 0 0; }
+.bar-col.li { background: var(--li); }
+.bar-col.bp { background: var(--bp); }
+.bar-col.pbo { background: rgba(0,0,0,0.18); }
+.bar-bl { font-family: 'Helvetica Neue', sans-serif; font-size: 9px; color: var(--muted); text-align: center; }
+
+.ind-content { flex: 1; }
+.ind-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; line-height: 1.2; }
+.ind-stat { font-family: 'Helvetica Neue', sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 4px; line-height: 1.4; }
+.ind-stat strong { color: var(--text); font-weight: 600; }
+.ind-note { font-size: 11px; color: var(--muted); line-height: 1.45; font-style: italic; }
+.ref { font-family: 'Helvetica Neue', sans-serif; font-size: 10px; color: var(--li); font-style: normal; margin-top: 3px; }
+
+.flag { display: inline-block; font-family: 'Helvetica Neue', sans-serif; font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+.flag-sig { background: rgba(29,158,117,0.12); color: #0d6b4e; }
+.flag-border { background: rgba(186,117,23,0.12); color: #7a4a00; }
+.flag-rw { background: rgba(90,159,224,0.12); color: #1a5a99; }
+
+.bottom-note {
+  background: var(--li-light);
+  border: 0.5px solid var(--li-mid);
+  border-radius: 8px;
+  padding: 9px 13px;
+  margin-bottom: 9px;
+}
+.bottom-note .bn-title { font-family: 'Helvetica Neue', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--li); margin-bottom: 5px; }
+.bn-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px 20px; }
+.bn-item { font-size: 11px; color: var(--text); line-height: 1.4; padding-left: 12px; position: relative; }
+.bn-item::before { content: '★'; position: absolute; left: 0; color: var(--li); font-size: 8px; top: 2px; }
+
+.sources-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.src-chip { font-family: 'Helvetica Neue', sans-serif; font-size: 10px; background: rgba(0,0,0,0.05); border: 0.5px solid var(--border); border-radius: 4px; padding: 3px 8px; color: var(--muted); }
+
+.footnote { font-size: 9.5px; color: var(--muted); font-family: 'Helvetica Neue', sans-serif; border-top: 0.5px solid var(--border); padding-top: 8px; line-height: 1.55; }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="header">
+    <div class="title-block">
+      <h1>Lithium — Number Needed to Treat by Indication</h1>
+      <div class="sub">Session-confirmed references only · RCT meta-analyses + Nordic registry data · v2</div>
+    </div>
+    <div class="version-badge">
+      References confirmed in this session<br>
+      Vázquez 2021 · Ercis 2023 · Tiihonen 2017<br>
+      Lähteenvuo 2018 · Ermis 2025 · Gitlin UpToDate
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BIPOLAR -->
+  <div class="section-label lbl-bp">Bipolar disorder</div>
+  <div class="section-row" style="margin-bottom:10px">
+
+    <div class="ind-card col-bp">
+      <div class="nnt-badge col-bp">
+        <div class="nnt-num">4</div>
+        <div class="nnt-label">NNT</div>
+        <div class="nnt-ci">ARR 25%</div>
+      </div>
+      <div class="bar-vis">
+        <div class="bar-pair">
+          <div class="bar-col li" style="height:59%"></div>
+          <div class="bar-col pbo" style="height:100%"></div>
+        </div>
+        <div class="bar-bl">Li · Pbo</div>
+      </div>
+      <div class="ind-content">
+        <div class="ind-title">Prevent any mood episode <span class="flag flag-sig">significant</span> <span class="flag flag-rw">registry confirmed</span></div>
+        <div class="ind-stat"><strong>36% relapse on lithium vs 61% on placebo</strong> over 1 year — ARR 25%</div>
+        <div class="ind-note">Cochrane RCT meta-analysis (5 RCTs, n=770). Real-world confirmation: Lähteenvuo 2018 — lithium HR 0.67 (CI 0.60–0.73) for psychiatric rehospitalization in 18,018 Finnish bipolar patients over 7 years; consistent beneficial effects for lithium only in sensitivity analyses.</div>
+        <div class="ref">Lähteenvuo et al. JAMA Psychiatry 2018;75(4):347–355 · Burgess et al. Cochrane 2001</div>
+      </div>
+    </div>
+
+    <div class="ind-card col-bp">
+      <div class="nnt-badge col-bp">
+        <div class="nnt-num">5</div>
+        <div class="nnt-label">NNT</div>
+        <div class="nnt-ci">CI 3–22</div>
+      </div>
+      <div class="bar-vis">
+        <div class="bar-pair">
+          <div class="bar-col li" style="height:50%"></div>
+          <div class="bar-col pbo" style="height:100%"></div>
+        </div>
+        <div class="bar-bl">Li · Pbo</div>
+      </div>
+      <div class="ind-content">
+        <div class="ind-title">Treat acute mania <span class="flag flag-sig">significant</span></div>
+        <div class="ind-stat"><strong>NNT=5 (CI 3–22)</strong> for ≥50% reduction on mania rating scale vs placebo</div>
+        <div class="ind-note">Used as internal standard in approval trials for quetiapine, topiramate, and aripiprazole — demonstrating reproducible efficacy across decades. Lithium was the comparator arm validating assay sensitivity in multiple industry-sponsored trials.</div>
+        <div class="ref">Müller-Oerlinghausen review, cited in Ercis et al. J Clin Psychiatry 2023;84(2):23ac14813</div>
+      </div>
+    </div>
+
+    <div class="ind-card col-bp">
+      <div class="nnt-badge col-bp">
+        <div class="nnt-num">10</div>
+        <div class="nnt-label">NNT</div>
+        <div class="nnt-ci">RR 0.62</div>
+      </div>
+      <div class="bar-vis">
+        <div class="bar-pair">
+          <div class="bar-col li" style="height:58%"></div>
+          <div class="bar-col pbo" style="height:100%"></div>
+        </div>
+        <div class="bar-bl">Li · Pbo</div>
+      </div>
+      <div class="ind-content">
+        <div class="ind-title">Prevent manic episode <span class="flag flag-sig">significant</span></div>
+        <div class="ind-stat"><strong>14% manic relapse on lithium vs 24% on placebo</strong> — RR 0.62 (CI 0.43–0.88, p=0.008)</div>
+        <div class="ind-note">Lithium uniquely superior to anticonvulsants for mania prevention (RR 0.66 vs valproate/carbamazepine). Lähteenvuo 2018 head-to-head: lithium HR 0.67 vs quetiapine HR 0.92 — quetiapine reduced rehospitalization only 7–8% vs lithium's 33%. Cochrane 5 RCTs, n=770.</div>
+        <div class="ref">Lähteenvuo et al. JAMA Psychiatry 2018;75(4):347–355 · Cochrane Burgess 2001</div>
+      </div>
+    </div>
+
+    <div class="ind-card col-bp" style="opacity:0.88">
+      <div class="nnt-badge col-bp">
+        <div class="nnt-num">14</div>
+        <div class="nnt-label">NNT</div>
+        <div class="nnt-ci">RR 0.73–0.78</div>
+      </div>
+      <div class="bar-vis">
+        <div class="bar-pair">
+          <div class="bar-col li" style="height:78%"></div>
+          <div class="bar-col pbo" style="height:100%"></div>
+        </div>
+        <div class="bar-bl">Li · Pbo</div>
+      </div>
+      <div class="ind-content">
+        <div class="ind-title">Prevent bipolar depression <span class="flag flag-border">borderline RCT</span> <span class="flag flag-rw">registry confirmed</span></div>
+        <div class="ind-stat"><strong>25% depressive relapse on lithium vs 32% on placebo</strong> — fixed effect significant (p&lt;0.001); random effects p=0.08</div>
+        <div class="ind-note">RCT signal is methodology-dependent. But real-world registry data is unambiguous: Ermis et al. 2025 (Swedish cohort, 105,495 bipolar patients, within-individual design) — <strong>lithium was the only specific monotherapy</strong> associated with reduced depression hospitalization (aHR 0.75, CI 0.67–0.85). All antidepressants, antipsychotics, and combinations increased risk.</div>
+        <div class="ref">Ermis et al. Lancet Psychiatry 2025;12(3):198–207 · Lähteenvuo et al. JAMA Psychiatry 2018;75(4):347–355</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- UNIPOLAR/MDD -->
+  <div class="section-label lbl-uni">Unipolar / MDD</div>
+  <div class="section-row">
+
+    <div class="ind-card col-li">
+      <div class="nnt-badge col-li">
+        <div class="nnt-num">5</div>
+        <div class="nnt-label">NNT</div>
+        <div class="nnt-ci">CI 4–10</div>
+      </div>
+      <div class="bar-vis">
+        <div class="bar-pair">
+          <div class="bar-col li" style="height:100%"></div>
+          <div class="bar-col pbo" style="height:35%"></div>
+        </div>
+        <div class="bar-bl">Li · Pbo</div>
+      </div>
+      <div class="ind-content">
+        <div class="ind-title">Augmentation in DTD / TRD <span class="flag flag-sig">significant</span></div>
+        <div class="ind-stat"><strong>41% response on lithium vs 14% on placebo</strong> — OR 3.11 (CI 1.80–5.37)</div>
+        <div class="ind-note">Vázquez et al. 2021 (our anchor study): lithium NNT=9 (CI 5–106) in augmentation, NNH/NNT=1.80 — the only augmentation agent where this ratio exceeds 1.0 (SGAs=0.45, esketamine=0.71). Ercis 2023 meta-analysis: NNT=5 (CI 4–10) vs SGAs NNT=11 (CI 9–15) vs esketamine NNT=7 (CI 4–10). TRD-specific subgroup (9 studies): OR=3.09 (CI 1.74–5.51). Gitlin UpToDate March 2026: confirmed first-line augmentation evidence.</div>
+        <div class="ref">Vázquez et al. J Psychopharmacol 2021;35:890–900 · Ercis, Ozerdem, Singh. J Clin Psychiatry 2023;84(2):23ac14813 · Gitlin MJ, UpToDate, accessed March 29, 2026</div>
+      </div>
+    </div>
+
+    <div class="ind-card col-uni">
+      <div class="nnt-badge col-uni">
+        <div class="nnt-num">~3</div>
+        <div class="nnt-label">NNT</div>
+        <div class="nnt-ci">ARR ~39%</div>
+      </div>
+      <div class="bar-vis">
+        <div class="bar-pair">
+          <div class="bar-col li" style="height:47%"></div>
+          <div class="bar-col pbo" style="height:100%"></div>
+        </div>
+        <div class="bar-bl">Li · Pbo</div>
+      </div>
+      <div class="ind-content">
+        <div class="ind-title">Prevent recurrent unipolar depression <span class="flag flag-sig">significant</span> <span class="flag flag-rw">registry confirmed</span></div>
+        <div class="ind-stat"><strong>36% relapse on lithium vs 75% on placebo</strong> — ARR 39% in maintenance RCTs</div>
+        <div class="ind-note">Davis 2006 meta-analysis (9 double-blind RCTs in recurrent unipolar). Real-world registry confirmation: Tiihonen 2017 Finnish registry (123,712 unipolar patients, 7.9yr follow-up, within-individual Cox regression) — lithium alone HR 0.31, the strongest protective signal of any agent. Antidepressants class HR 1.10 — worse than no treatment. "I think the Finnish population data are compelling — especially given the size of the effect." — commentary, JAMA Psychiatry 2018.</div>
+        <div class="ref">Tiihonen et al. Lancet Psychiatry 2017;4:547–553 · Lähteenvuo et al. JAMA Psychiatry 2018;75(4):347–355 (commentary)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Key points -->
+  <div class="bottom-note">
+    <div class="bn-title">★ What these NNTs mean for primary care — confirmed talking points</div>
+    <div class="bn-grid">
+      <div class="bn-item">NNT=4–5 across multiple indications. For comparison: aspirin for secondary MI prevention NNT≈50. Statins for secondary prevention NNT≈20–30. Lithium in the right patient is a high-yield intervention by any pharmacological standard.</div>
+      <div class="bn-item">Unipolar recurrence prevention NNT~3 is the most underused application in primary care. The patient with ≥3 depressive episodes on your panel — "recurrent MDD" on the problem list — is a guideline-supported candidate to discuss lithium. Tiihonen 2017 shows antidepressants alone HR 1.10 in this population.</div>
+      <div class="bn-item">Bipolar depression prevention: weakest RCT signal (NNT=14, borderline). But Ermis 2025 — 105,495 real patients — shows lithium is the <em>only agent</em> that reduced depression hospitalization. Every other treatment including antidepressants and antipsychotics increased it.</div>
+      <div class="bn-item">NNH/NNT=1.80 in augmentation (Vázquez 2021): only agent where the ratio exceeds 1.0. You must harm more patients than you help before canceling the benefit. SGAs=0.45, esketamine=0.71. This is the slide your audience will remember.</div>
+      <div class="bn-item">Lähteenvuo 2018 head-to-head: quetiapine HR 0.92 — only 7–8% reduction in rehospitalization. Lithium HR 0.67 — 33% reduction. Yet quetiapine is what primary care reaches for first. This is the prescribing gap in a single number.</div>
+      <div class="bn-item">All NNTs are vs placebo from RCT meta-analyses. Nordic registry HRs (Tiihonen, Lähteenvuo, Ermis) use within-individual Cox regression — each patient serves as their own control, eliminating between-person confounding. These are the strongest possible observational designs.</div>
+    </div>
+  </div>
+
+  <!-- Source chips -->
+  <div class="sources-bar">
+    <div class="src-chip">Vázquez et al. J Psychopharmacol 2021;35:890–900</div>
+    <div class="src-chip">Ercis, Ozerdem, Singh. J Clin Psychiatry 2023;84(2):23ac14813</div>
+    <div class="src-chip">Tiihonen et al. Lancet Psychiatry 2017;4:547–553</div>
+    <div class="src-chip">Lähteenvuo et al. JAMA Psychiatry 2018;75(4):347–355</div>
+    <div class="src-chip">Ermis et al. Lancet Psychiatry 2025;12(3):198–207</div>
+    <div class="src-chip">Gitlin MJ. UpToDate, accessed March 29, 2026</div>
+  </div>
+
+  <div class="footnote">
+    NNT = number needed to treat; ARR = absolute risk reduction; OR = odds ratio; HR = hazard ratio. All RCT NNTs calculated vs placebo from confirmed meta-analyses. Nordic registry HRs use within-individual Cox regression (each patient their own control) — strongest feasible observational design. Bipolar depression prevention NNT=14 based on fixed-effect RCT analysis only; random-effects p=0.08. Real-world registry confirmation via Ermis 2025 substantially strengthens this indication. ★ References limited to those confirmed in this session — see Undurraga &amp; Baldessarini 2019 (J Psychopharmacol) for systematic unipolar review; Gitlin UpToDate accessed March 2026 for current clinical synthesis.
+  </div>
+
+</div>
+</body>
+</html>

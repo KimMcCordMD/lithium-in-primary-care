@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Math of TRD</title>
+<style>
+:root {
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --text: #1a1c22;
+  --muted: #5a5c66;
+  --border: rgba(0,0,0,0.09);
+  --li: #1D9E75;
+  --li-light: rgba(29,158,117,0.10);
+  --li-mid: rgba(29,158,117,0.30);
+  --blue: #185FA5;
+  --blue-light: rgba(24,95,165,0.08);
+  --blue-mid: rgba(24,95,165,0.25);
+  --amber: #BA7517;
+  --amber-light: rgba(186,117,23,0.10);
+  --amber-mid: rgba(186,117,23,0.28);
+  --slate: #4A5568;
+  --slate-light: rgba(74,85,104,0.07);
+  --navy: #0d1b2a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---- PAGE WRAPPER ---- */
+.page {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 20px 30px 16px;
+}
+
+/* ---- HEADER ---- */
+.page-header {
+  margin-bottom: 10px;
+}
+
+.main-title {
+  font-family: 'Georgia', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.main-subtitle {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 10px 0 14px;
+}
+
+/* ---- CHAIN ---- */
+.chain {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.chain-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.chain-box {
+  border-radius: 8px;
+  padding: 11px 13px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.chain-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 16px;
+  padding-bottom: 8px;
+}
+
+.box-label {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 5px;
+}
+
+.box-num {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.box-sub {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.box-source {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  font-style: italic;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 0.5px solid rgba(0,0,0,0.07);
+  line-height: 1.4;
+}
+
+/* color variants */
+.box-base { background: var(--slate-light); border: 0.5px solid rgba(74,85,104,0.15); }
+.box-base .box-label { color: var(--slate); }
+.box-base .box-num { color: var(--slate); }
+.box-base .box-source { color: var(--muted); }
+
+.box-blue { background: var(--blue-light); border: 0.5px solid var(--blue-mid); }
+.box-blue .box-label { color: var(--blue); }
+.box-blue .box-num { color: var(--blue); }
+.box-blue .box-source { color: var(--blue); opacity: 0.7; }
+
+.box-amber { background: var(--amber-light); border: 0.5px solid var(--amber-mid); }
+.box-amber .box-label { color: var(--amber); }
+.box-amber .box-num { color: var(--amber); }
+.box-amber .box-source { color: var(--amber); opacity: 0.7; }
+
+.box-green { background: var(--li-light); border: 0.5px solid var(--li-mid); }
+.box-green .box-label { color: var(--li); }
+.box-green .box-num { color: var(--li); }
+.box-green .box-source { color: var(--li); opacity: 0.7; }
+
+/* ---- BOTTOM NOTE ---- */
+.bottom-note {
+  background: var(--li-light);
+  border: 0.5px solid var(--li-mid);
+  border-radius: 8px;
+  padding: 9px 13px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.bottom-note strong { color: var(--li); }
+
+/* ---- FOOTNOTE ---- */
+.footnote {
+  font-size: 9.5px;
+  color: var(--muted);
+  font-family: 'Helvetica Neue', sans-serif;
+  border-top: 0.5px solid var(--border);
+  padding-top: 8px;
+  line-height: 1.55;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <div class="main-title">The Math of TRD</div>
+    <div class="main-subtitle">How many patients in your practice might benefit?</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- CHAIN -->
+  <div class="chain">
+
+    <div class="chain-step">
+      <div class="chain-box box-base">
+        <div>
+          <div class="box-label">Starting panel</div>
+          <div class="box-num">300,000</div>
+          <div class="box-sub">Adult patients in a 400,000-patient health system (~100,000 pediatric subtracted)</div>
+        </div>
+        <div class="box-source">Representative health system estimate</div>
+      </div>
+    </div>
+
+    <div class="chain-arrow">→</div>
+
+    <div class="chain-step">
+      <div class="chain-box box-blue">
+        <div>
+          <div class="box-label">Diagnosed depression</div>
+          <div class="box-num">~39,000</div>
+          <div class="box-sub">~13% of primary care encounters involve a patient with a depression diagnosis</div>
+        </div>
+        <div class="box-source">Jackson et al. Am J Med 2022 · NAMCS 2010–2018</div>
+      </div>
+    </div>
+
+    <div class="chain-arrow">→</div>
+
+    <div class="chain-step">
+      <div class="chain-box box-amber">
+        <div>
+          <div class="box-label">Meet TRD criteria</div>
+          <div class="box-num">8,600–21,000</div>
+          <div class="box-sub">22–55% of treated depression patients meet TRD criteria (≥2 adequate antidepressant trials)</div>
+        </div>
+        <div class="box-source">Rizvi 2014 (22%) · Thomas/CoBalT 2013 (55%)</div>
+      </div>
+    </div>
+
+    <div class="chain-arrow">→</div>
+
+    <div class="chain-step">
+      <div class="chain-box box-green">
+        <div>
+          <div class="box-label">Potential lithium responders</div>
+          <div class="box-num">3,400–12,600</div>
+          <div class="box-sub">40–60% of SSRI patients achieve ≥50% symptom reduction with lithium augmentation</div>
+          <div style="margin-top:8px; padding-top:7px; border-top:0.5px solid rgba(29,158,117,0.2);">
+            <div style="font-family:'Helvetica Neue',sans-serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--li); margin-bottom:3px;">Among responders</div>
+            <div style="font-size:10.5px; color:var(--text); line-height:1.45;">Lithium also reduces likelihood of the next episode — NNT~3 for recurrent unipolar prevention (Davis 2006); HR 0.31 in Finnish registry (Tiihonen 2017).</div>
+            <div style="font-size:10px; color:var(--muted); margin-top:4px; font-style:italic; line-height:1.4;">Caveat: maintenance effect may require levels of 0.6–0.75 mEq/L. Target 0.4 in elderly or frail patients.</div>
+          </div>
+        </div>
+        <div class="box-source">Ercis 2023 · Vázquez 2021 · Davis 2006 · Tiihonen 2017</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OFFER NOTE -->
+  <div class="bottom-note">
+    To reach <strong>3,400–12,600 potential responders</strong>, lithium needs to be offered to all <strong>8,600–21,000</strong> eligible TRD patients.
+  </div>
+
+  <div class="footnote">
+    Depression prevalence: Jackson et al. Am J Med 2022 (13.1%, NAMCS 2010–2018 national probability sample). TRD range: Rizvi et al. Can J Psychiatry 2014 (22% Canadian primary care claims); Thomas et al. Br J Gen Pract 2013 / CoBalT (55% UK primary care cross-sectional). TRD defined as ≥2 adequate antidepressant trials without remission. Lithium augmentation response: Ercis, Ozerdem, Singh J Clin Psychiatry 2023 (NNT=5, 40–60% response range); Vázquez et al. J Psychopharmacol 2021. All figures are ranges — individual practice panels will vary.
+  </div>
+
+</div>
+</body>
+</html>

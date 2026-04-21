@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Lithium — Thyroid</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; max-width: 960px; margin: 0 auto; color: #222; background: #fff; }
+  .two-col { display: flex; gap: 16px; }
+  .two-col > div { flex: 1; }
+  .card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .card-title { font-size: 13px; font-weight: 500; margin: 0 0 8px; }
+  .cal { border-left: 3px solid; border-radius: 0 6px 6px 0; padding: 8px 12px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #444; }
+  .ca { border-color: #185FA5; background: #E6F1FB44; }
+  .cg { border-color: #3B6D11; background: #EAF3DE44; }
+  .co { border-color: #BA7517; background: #FAEEDA44; }
+  .slist { margin: 6px 0; padding: 0; list-style: none; }
+  .slist li { font-size: 12px; padding: 4px 0 4px 14px; position: relative; line-height: 1.4; border-bottom: 0.5px solid #eee; color: #444; }
+  .slist li:last-child { border-bottom: none; }
+  .slist li:before { content: "→"; position: absolute; left: 0; color: #999; }
+  .tsh-bar-wrap { margin: 10px 0; }
+  .tsh-bar { position: relative; height: 28px; border-radius: 6px; overflow: visible; display: flex; margin-bottom: 52px; }
+  .tsh-seg { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; }
+  .tsh-label { position: absolute; bottom: -44px; font-size: 10px; color: #666; transform: translateX(-50%); white-space: nowrap; text-align: center; line-height: 1.4; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .stat-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .stat-card { flex: 1; background: #f5f5f5; border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 500; }
+  .stat-label { font-size: 11px; color: #666; line-height: 1.3; margin-top: 2px; }
+  .footnote { font-size: 11px; color: #999; border-top: 0.5px solid #eee; padding-top: 8px; margin-top: 4px; line-height: 1.5; }
+</style></head><body>
+<div style="font-family:'Georgia',serif;font-size:22px;font-weight:700;color:#0d1b2a;line-height:1.2;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid rgba(0,0,0,0.1);">Thyroid Change is Common. Discuss Early, Treat Early.</div>
+<div class="two-col">
+  <div>
+    <div class="card">
+      <div class="card-title">Background and lithium risk</div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">~10%</div><div class="stat-label">Background population rate of hypothyroidism</div></div>
+        <div class="stat-card"><div class="stat-num">~18%</div><div class="stat-label">Average rate on lithium (Meyer &amp; Stahl, Lithium Handbook)</div></div>
+      </div>
+      <div class="cal ca"><strong>Discuss before starting lithium.</strong> Plan to treat hypothyroidism if it develops — it is not a reason to stop.</div>
+      <ul class="slist"><li>Female sex, older age, and autoimmune history increase baseline risk further</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Screening protocol</div>
+      <ul class="slist">
+        <li><span class="badge badge-blue">Baseline</span> &nbsp;TSH before starting</li>
+        <li><span class="badge badge-blue">3 months</span> &nbsp;First recheck</li>
+        <li><span class="badge badge-blue">Every 6 months</span> &nbsp;Ongoing if stable</li>
+        <li><span class="badge badge-amber">With any symptoms</span> &nbsp;Do not wait for the next scheduled check</li>
+      </ul>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-title">TSH targets — lithium patients are not general patients</div>
+      <div class="tsh-bar-wrap">
+        <div style="font-size:11px;color:#888;margin-bottom:6px;">TSH (mIU/L)</div>
+        <div class="tsh-bar">
+          <div class="tsh-seg" style="width:10%;background:#EAF3DE;border-radius:6px 0 0 6px;"><span style="font-size:9px;color:#27500A;">0–1</span></div>
+          <div class="tsh-seg" style="width:10%;background:#C0DD97;"><span style="font-size:9px;color:#173404;">1–2</span></div>
+          <div class="tsh-seg" style="width:30%;background:#FAC775;"><span style="font-size:9px;color:#412402;">2–5</span></div>
+          <div class="tsh-seg" style="width:25%;background:#F09595;"><span style="font-size:9px;color:#791F1F;">5–10</span></div>
+          <div class="tsh-seg" style="width:25%;background:#E24B4A;border-radius:0 6px 6px 0;"><span style="font-size:9px;color:#FCEBEB;">&gt;10</span></div>
+          <div class="tsh-label" style="left:5%;">Optimal if mood<br>symptoms still present</div>
+          <div class="tsh-label" style="left:15%;">Acceptable<br>floor</div>
+          <div class="tsh-label" style="left:37%;">Treat — do not<br>watch and wait</div>
+          <div class="tsh-label" style="left:67.5%;">General population<br>"acceptable"<br>— not advised here</div>
+          <div class="tsh-label" style="left:87.5%;">Treat<br>urgently</div>
+        </div>
+      </div>
+      <div class="cal cg"><strong>Target TSH &lt;2.</strong> Consider pushing toward TSH ~1 if mood symptoms are still present.</div>
+      <div class="cal co"><strong>Do not apply the general population threshold.</strong> Allowing TSH to drift to 5, 7, or 10 is not advised in mood disorder patients on lithium. Subclinical hypothyroidism contributes to treatment resistance.</div>
+      <div class="cal cg"><strong>Treatment:</strong> levothyroxine.</div>
+    </div>
+    <div class="card" style="margin-top:10px;">
+      <div class="card-title">Pregnancy</div>
+      <ul class="slist">
+        <li>Renal clearance increases significantly during pregnancy — lithium levels may fall</li>
+        <li><strong>Increase lithium dose by ~20%</strong> during pregnancy to maintain therapeutic levels</li>
+        <li>Monitor levels more frequently — monthly in second and third trimester</li>
+        <li>Reduce back to pre-pregnancy dose immediately postpartum — clearance drops rapidly</li>
+      </ul>
+    </div>
+    <div class="footnote">Note: lithium can cause thyroiditis. A suppressed TSH in a lithium patient warrants further evaluation.</div>
+  </div>
+</div>
+</body></html>

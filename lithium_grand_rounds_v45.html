@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithium in Primary Care — Grand Rounds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ============================================================
+   GLOBAL OVERRIDES & CUSTOM THEME
+   ============================================================ */
+:root {
+  --navy: #0d1b2a;
+  --navy-mid: #152336;
+  --navy-light: #1e3352;
+  --gold: #c9a84c;
+  --gold-light: #e2c578;
+  --cream: #f5f0e8;
+  --cream-dark: #e8e0d0;
+  --text-dark: #1a1c22;
+  --text-mid: #3a3c44;
+  --muted: #5a5c66;
+  --border: rgba(0,0,0,0.09);
+  --green: #1D9E75;
+  --green-light: rgba(29,158,117,0.10);
+  --green-mid: rgba(29,158,117,0.30);
+  --blue: #185FA5;
+  --blue-light: rgba(24,95,165,0.08);
+  --blue-mid: rgba(24,95,165,0.22);
+  --amber: #BA7517;
+  --amber-light: rgba(186,117,23,0.10);
+  --amber-mid: rgba(186,117,23,0.25);
+  --red: #A32D2D;
+  --red-light: rgba(163,45,45,0.08);
+  --red-mid: rgba(163,45,45,0.25);
+  --purple: #534AB7;
+  --purple-light: rgba(83,74,183,0.08);
+  --purple-mid: rgba(83,74,183,0.22);
+}
+
+.reveal { font-family: 'Source Sans 3', sans-serif; }
+.reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; text-transform: none; letter-spacing: -0.02em; }
+.reveal .slides section { text-align: left; }
+
+/* ============================================================
+   DARK SLIDES (title, section headers, quotes)
+   ============================================================ */
+.dark-slide { background: var(--navy) !important; color: var(--cream) !important; }
+.dark-slide h1, .dark-slide h2, .dark-slide h3 { color: var(--gold) !important; text-shadow: none !important; }
+.dark-slide p, .dark-slide li { color: var(--cream-dark) !important; }
+
+/* ============================================================
+   LIGHT SLIDES (content)
+   ============================================================ */
+.light-slide { background: #f7f6f3 !important; color: var(--text-dark) !important; }
+.light-slide h1, .light-slide h2, .light-slide h3 { color: var(--navy) !important; text-shadow: none !important; }
+
+/* ============================================================
+   SLIDE NUMBER
+   ============================================================ */
+.reveal .slide-number { background: rgba(0,0,0,0.4); color: #aaa; font-family: 'Source Sans 3', sans-serif; font-size: 11px; padding: 3px 8px; border-radius: 3px; }
+
+/* ============================================================
+   TITLE SLIDE
+   ============================================================ */
+.title-slide { background: var(--navy) !important; display: flex !important; flex-direction: column; justify-content: center; padding: 60px !important; }
+.title-slide .pre-title { font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 20px; }
+.title-slide h1 { font-size: 3.4em !important; line-height: 1.1 !important; color: var(--cream) !important; margin-bottom: 24px !important; }
+.title-slide h1 em { color: var(--gold); font-style: normal; }
+.title-slide .subtitle { font-size: 1.15em; color: var(--cream-dark); line-height: 1.6; max-width: 600px; margin-bottom: 40px; }
+.title-slide .byline { font-size: 0.9em; color: rgba(245,240,232,0.6); border-top: 1px solid rgba(201,168,76,0.3); padding-top: 20px; }
+
+/* ============================================================
+   SECTION HEADER SLIDES
+   ============================================================ */
+.section-header { background: var(--navy-mid) !important; display: flex !important; flex-direction: column; justify-content: center; padding: 80px !important; position: relative; overflow: hidden; }
+.section-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), transparent); }
+.section-header .section-num { font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); opacity: 0.7; margin-bottom: 16px; }
+.section-header h2 { font-size: 2.8em !important; color: var(--cream) !important; line-height: 1.15 !important; margin-bottom: 24px !important; }
+.section-header .section-sub { font-size: 1.05em; color: rgba(245,240,232,0.65); line-height: 1.6; max-width: 620px; }
+.section-header .gold-rule { width: 60px; height: 2px; background: var(--gold); margin-bottom: 28px; }
+
+/* ============================================================
+   OPENING QUOTE SLIDE
+   ============================================================ */
+.quote-slide { background: #0a1520 !important; display: flex !important; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 80px !important; }
+.quote-slide .quote-mark { font-family: 'Playfair Display', serif; font-size: 6em; color: var(--gold); opacity: 0.25; line-height: 0.5; margin-bottom: 20px; }
+.quote-slide blockquote { font-family: 'Playfair Display', serif; font-size: 1.6em; font-style: italic; color: var(--cream); line-height: 1.5; max-width: 820px; border: none; padding: 0; margin: 0 0 28px 0; }
+.quote-slide .attribution { font-size: 0.9em; color: var(--gold-light); letter-spacing: 0.05em; }
+
+/* ============================================================
+   IFRAME WRAPPER (for interactive widgets)
+   ============================================================ */
+.widget-slide { background: #f7f6f3 !important; padding: 0 !important; }
+.widget-slide iframe { width: 100%; height: 100%; border: none; display: block; }
+
+/* ============================================================
+   PERMISSION STRUCTURE / SPOKEN BRIDGE SLIDES
+   ============================================================ */
+.bridge-slide { background: var(--navy) !important; padding: 60px !important; display: flex !important; flex-direction: column; justify-content: center; }
+.bridge-slide h3 { color: var(--gold) !important; font-size: 1.4em !important; margin-bottom: 20px !important; }
+.bridge-slide p { color: var(--cream-dark); font-size: 1.0em; line-height: 1.7; max-width: 800px; }
+.bridge-slide .spoken-label { font-family: 'Source Sans 3', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); opacity: 0.6; margin-bottom: 14px; }
+
+/* ============================================================
+   NNT CARD / DATA HIGHLIGHT SLIDES
+   ============================================================ */
+.stat-highlight { background: #f7f6f3 !important; padding: 40px 50px !important; }
+.stat-highlight h2 { font-size: 1.6em !important; color: var(--navy) !important; margin-bottom: 24px !important; }
+.stat-highlight .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.stat-box { background: #fff; border: 0.5px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+.stat-box .num { font-size: 2.4em; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.stat-box .label { font-size: 0.82em; color: var(--muted); line-height: 1.4; }
+.stat-box.green .num { color: var(--green); }
+.stat-box.blue .num { color: var(--blue); }
+.stat-box.amber .num { color: var(--amber); }
+.stat-box.purple .num { color: var(--purple); }
+
+/* ============================================================
+   DEMENTIA / NEUROPROTECTION SLIDE
+   ============================================================ */
+.neuro-slide { background: #f7f6f3 !important; padding: 36px 44px !important; }
+.neuro-slide h2 { font-size: 1.5em !important; color: var(--navy) !important; margin-bottom: 20px !important; }
+.neuro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.neuro-card { background: #fff; border: 0.5px solid var(--border); border-radius: 9px; padding: 14px 16px; }
+.neuro-card .card-label { font-family: 'Source Sans 3', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; padding-bottom: 5px; border-bottom: 0.5px solid var(--border); }
+.neuro-card.blue .card-label { color: var(--blue); }
+.neuro-card.green .card-label { color: var(--green); }
+.neuro-card.amber .card-label { color: var(--amber); }
+.neuro-card.purple .card-label { color: var(--purple); }
+.neuro-card ul { list-style: none; padding: 0; margin: 0; }
+.neuro-card li { font-size: 11px; color: var(--text-dark); padding: 3px 0 3px 13px; position: relative; line-height: 1.45; border-bottom: 0.5px solid var(--border); }
+.neuro-card li:last-child { border-bottom: none; }
+.neuro-card li::before { content: "→"; position: absolute; left: 0; color: var(--muted); font-size: 10px; }
+
+/* ============================================================
+   CLOSING SLIDE
+   ============================================================ */
+.closing-slide { background: var(--navy) !important; padding: 60px !important; display: flex !important; flex-direction: column; justify-content: center; }
+.closing-slide h2 { color: var(--gold) !important; font-size: 2em !important; margin-bottom: 28px !important; }
+.closing-slide .closing-text { color: var(--cream-dark); font-size: 0.95em; line-height: 1.75; max-width: 820px; column-count: 2; column-gap: 40px; }
+.closing-slide .closing-text p { margin-bottom: 14px; break-inside: avoid; }
+.closing-slide .cta { margin-top: 32px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2em; color: var(--gold-light); }
+
+/* ============================================================
+   WHY YOU SLIDE
+   ============================================================ */
+.why-you-slide { background: var(--navy-mid) !important; padding: 60px !important; display: flex !important; flex-direction: column; justify-content: center; }
+.why-you-slide h2 { color: var(--gold) !important; font-size: 1.8em !important; margin-bottom: 28px !important; }
+.why-you-quote { border-left: 3px solid var(--gold); padding: 16px 20px; background: rgba(201,168,76,0.06); border-radius: 0 8px 8px 0; margin-bottom: 24px; }
+.why-you-quote p { font-family: 'Playfair Display', serif; font-style: italic; color: var(--cream); font-size: 1.0em; line-height: 1.65; }
+.why-you-body { color: var(--cream-dark); font-size: 0.9em; line-height: 1.7; max-width: 840px; column-count: 2; column-gap: 36px; }
+.why-you-body p { margin-bottom: 12px; break-inside: avoid; }
+
+/* ============================================================
+   REFERENCES SLIDE — fix CSS vars
+   ============================================================ */
+.ref-slide-inner { --font-sans: 'Source Sans 3', sans-serif; --color-text-primary: var(--text-dark); --color-text-secondary: var(--muted); --color-border-tertiary: var(--border); }
+
+/* ============================================================
+   PREGNANCY — fix CSS vars
+   ============================================================ */
+.preg-slide-inner { --font-sans: 'Source Sans 3', sans-serif; --color-background-primary: #ffffff; --color-background-secondary: #f5f5f5; --color-border-tertiary: rgba(0,0,0,0.09); --color-text-primary: #1a1c22; --color-text-secondary: #5a5c66; --color-text-tertiary: #9a9ca6; }
+
+/* ============================================================
+   SPEAKER NOTES REMINDER BAR (hidden in presentation)
+   ============================================================ */
+.reveal aside.notes { display: none; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================
+     SLIDE 1: TITLE
+     ============================================================ -->
+<section class="title-slide dark-slide" data-background-color="#0d1b2a">
+  <div class="pre-title">Grand Rounds · Southeast Michigan · Primary Care</div>
+  <h1>Lithium in <em>Primary Care</em></h1>
+  <div class="subtitle">A permission structure for a tool you already have — and haven't yet used.</div>
+  <div class="byline">
+    Kimberly J. McCord, MD · Trinity IHA Canton Primary Care
+  </div>
+  <aside class="notes">Personal Disclosure: Spoken over this slide. "What I'm offering today is a framework — my lens, shaped by many sources and a lot of clinical time. I've tried to synthesize honestly. But I am just one voice — I hope you will seek out others."</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 2: OPENING QUOTE — Chaplin
+     ============================================================ -->
+<section data-background-color="#0f1117" data-transition="fade" style="padding:0;margin:0;width:100%;height:100%;">
+  <iframe src="lithium_opening_quote.html" style="width:100%;height:700px;border:none;display:block;background:#0f1117;"></iframe>
+  <aside class="notes">Charlie Chaplin: "It takes courage to make a fool of yourself." — The permission structure begins here.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 3: SECTION HEADER — Why This Matters
+     ============================================================ -->
+<section class="section-header" data-background-color="#152336">
+  <div class="section-num">Part I</div>
+  <div class="gold-rule"></div>
+  <h2>Why This Matters</h2>
+  <ul style="list-style:none;padding:0;margin:90px 0 0 30px;">
+    <li style="display:flex;align-items:flex-start;gap:18px;margin-bottom:36px;">
+      <span style="flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-top:10px;"></span>
+      <span style="font-family:'Source Sans 3',sans-serif;font-size:1.05em;color:rgba(245,240,232,0.8);line-height:1.6;">Treatment-resistant depression is common.</span>
+    </li>
+    <li style="display:flex;align-items:flex-start;gap:18px;">
+      <span style="flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-top:10px;"></span>
+      <span style="font-family:'Source Sans 3',sans-serif;font-size:1.05em;color:rgba(245,240,232,0.8);line-height:1.6;">Too common to refer them all out.</span>
+    </li>
+  </ul>
+  <aside class="notes">Spoken: "Treatment-resistant depression is common. Too common to refer them all out. We are already seeing these patients — we need tools."</aside>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 3c: 4 TOP STRATEGIES FOR TRD
+     ============================================================ -->
+<section class="dark-slide" data-background-color="#152336" style="padding:40px 80px;display:flex;flex-direction:column;justify-content:center;">
+  <div style="font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:var(--gold);opacity:0.75;margin-bottom:12px;">Evidence-Based Options</div>
+  <div style="width:60px;height:2px;background:var(--gold);margin-bottom:18px;"></div>
+  <h2 style="font-family:'Playfair Display',serif;color:var(--cream);font-size:1.8em;line-height:1.2;margin-bottom:20px;">Top Strategies for TRD</h2>
+
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:660px;margin-top:20px;margin-left:40px;">
+
+    <!-- AUGMENTATION -->
+    <div style="background:rgba(255,255,255,0.05);border:0.5px solid rgba(201,168,76,0.25);border-radius:10px;padding:12px 18px;">
+      <div style="font-family:'Playfair Display',serif;font-size:1.05em;font-weight:700;color:var(--gold);margin-bottom:8px;">Augmentation Strategies</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:0.8em;color:rgba(245,240,232,0.7);display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:9px;">▸</span>Lithium</span>
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:0.8em;color:rgba(245,240,232,0.7);display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:9px;">▸</span>Second-generation antipsychotics (SGAs)</span>
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:0.8em;color:rgba(245,240,232,0.7);display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:9px;">▸</span>Pramipexole</span>
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:0.8em;color:rgba(245,240,232,0.7);display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:9px;">▸</span>Ketamine / esketamine</span>
+      </div>
+    </div>
+
+    <!-- NEUROSTIMULATION -->
+    <div style="background:rgba(255,255,255,0.05);border:0.5px solid rgba(201,168,76,0.25);border-radius:10px;padding:12px 18px;">
+      <div style="font-family:'Playfair Display',serif;font-size:1.05em;font-weight:700;color:var(--gold);margin-bottom:8px;">Neurostimulation</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:0.8em;color:rgba(245,240,232,0.7);display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:9px;">▸</span>TMS</span>
+        <span style="font-family:'Source Sans 3',sans-serif;font-size:0.8em;color:rgba(245,240,232,0.7);display:flex;align-items:center;gap:6px;"><span style="color:var(--gold);font-size:9px;">▸</span>ECT</span>
+      </div>
+    </div>
+
+  </div>
+  <aside class="notes">Augmentation strategies with the strongest evidence base, then neurostimulation as a separate pathway.</aside>
+</section>
+
+
+
+<!-- ============================================================
+     SLIDE 4: POPULATION MATH
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#f7f6f3">
+  <iframe src="lithium_population_math.html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">The Math of TRD. 300,000 adult patients → ~39,000 diagnosed depression → 8,600–21,000 TRD → 3,400–12,600 potential lithium responders in a 400k-patient system.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 6: NNT / OUTCOMES BUBBLE CHART — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#0f1117">
+  <iframe src="lithium_slides_practice (2).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Two-panel interactive chart. Panel 1: Patient-years of evidence for lithium suicide prevention — Cipriani, Baldessarini, Tondo, Nabi. Panel 2: TRD/DTD augmentation — NNT and risk-benefit ratio. Lithium NNH/NNT >1 — meaning you must harm more patients than you help to cancel benefit. Esketamine=0.71, SGAs=0.45.</aside>
+</section>
+
+<!-- ============================================================
+     ANTISUICIDAL COMPARISON
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#0f1117">
+  <iframe src="lithium_antisuicidal.html" style="width:100%;height:700px;border:none;background:#0f1117;"></iframe>
+  <aside class="notes">Antisuicidal comparison — lithium, SGAs, clozapine, esketamine, SSRI by age, valproate. Four views: all endpoints, completed suicide, attempts, ideation. Bottom panel shows full study details on hover.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 7: STUDY DESIGN — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_study_design (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Propensity score matching and mirror image design. Why these methods matter for interpreting lithium literature. Fornaro 200 covariates. Mirror image eliminates between-person confounding entirely.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 8: SECTION HEADER — Lithium Is Unique
+     ============================================================ -->
+<section class="section-header" data-background-color="#152336">
+  <div class="section-num">Part II</div>
+  <div class="gold-rule"></div>
+  <h2>Lithium Is Unique</h2>
+  <div class="section-sub">You can call it a mood stabilizer, but there is nothing else that is a version of it.</div>
+  <aside class="notes">Spoken: The gravity analogy. "Like gravity. Like sunlight. It falls through the levers and molecules of our biology in a certain way, creating multiple effects." Then patient quotes slide.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 9: PATIENT QUOTES — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_quotes (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Ghaemi anchor: "There is no minimum dose." 50mg patient. Clinical observations: deeper sleep, no longer thinking about suicide. Forum voices: relief like painkiller, zero suicidal thoughts 9 months later, only medication that enabled real remission.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 10: DEMENTIA / NEUROPROTECTION
+     ============================================================ -->
+<section class="neuro-slide light-slide">
+  <h2>Lithium and the Brain — Beyond Mood</h2>
+  <div class="neuro-grid">
+    <div class="neuro-card blue">
+      <div class="card-label blue">Alzheimer's Prevention</div>
+      <ul>
+        <li>Aron &amp; Yankner, Nature 2025 — lithium deficiency associated with earlier Alzheimer's onset</li>
+        <li>Kessing et al. 2008 — long-term lithium use associated with reduced dementia incidence</li>
+        <li>GSK-3β inhibition — one proposed mechanism for neuroprotective effect</li>
+      </ul>
+    </div>
+    <div class="neuro-card green">
+      <div class="card-label green">Neuroprotection</div>
+      <ul>
+        <li>Promotes BDNF expression — neuronal survival and plasticity</li>
+        <li>Reduces tau phosphorylation — relevant to Alzheimer's pathology</li>
+        <li>Signal seen at low doses; prescription dose not required for all effects</li>
+      </ul>
+    </div>
+    <div class="neuro-card amber">
+      <div class="card-label amber">Sleep &amp; Circadian</div>
+      <ul>
+        <li>Clock gene regulation — lithium lengthens circadian period</li>
+        <li>Patients frequently report deeper, more restorative sleep early in treatment</li>
+        <li>Dose required for circadian effects not definitively established</li>
+      </ul>
+    </div>
+    <div class="neuro-card purple">
+      <div class="card-label purple">What We Don't Know</div>
+      <ul>
+        <li>Which effects require prescription dose vs. OTC doses vs. nutritional levels</li>
+        <li>Biomarker for lithium response does not exist — offer to all appropriate patients</li>
+        <li>Longitudinal registries (European nationalized systems) carry strongest signals</li>
+      </ul>
+    </div>
+  </div>
+  <div style="font-size:10px;color:var(--muted);border-top:0.5px solid var(--border);padding-top:8px;margin-top:12px;font-family:'Source Sans 3',sans-serif;">Aron &amp; Yankner, Nature 2025 · Kessing et al. JAMA 2008 · Gildengers 2026 JAMA Neurology · Nunes microdose trial · Ghaemi Lithium Masterclass</div>
+  <aside class="notes">Spoken: "Some people wonder if lithium is a micronutrient." The gravity analogy extended — taking gravity away from an adult weakens them; keep it from a child and they develop differently. We cannot know which patients will benefit from which effects. The doses required for dementia prevention, longevity, sleep and circadian regulation are not definitively known.</aside>
+</section>
+<!-- ============================================================
+     SLIDE 12: THE OFFER RATE ARGUMENT
+     ============================================================ -->
+<section class="bridge-slide dark-slide" style="padding:60px 80px;">
+  <div class="spoken-label">The Offer Rate Argument</div>
+  <h3 style="margin-bottom:32px;">The gap is not a safety issue.</h3>
+
+  <p style="color:var(--gold-light);font-style:italic;font-family:'Playfair Display',serif;font-size:1.1em;line-height:1.6;margin-bottom:32px;">It is an education and access issue:</p>
+
+  <ul style="list-style:none;padding:0;margin:0 0 0 20px;">
+    <li style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--gold);"></span>
+      <span style="font-family:'Source Sans 3',sans-serif;font-size:1.05em;color:rgba(245,240,232,0.85);">Education</span>
+    </li>
+    <li style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span style="flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--gold);"></span>
+      <span style="font-family:'Source Sans 3',sans-serif;font-size:1.05em;color:rgba(245,240,232,0.85);">Acquiring the skills</span>
+    </li>
+    <li style="display:flex;align-items:center;gap:14px;">
+      <span style="flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--gold);"></span>
+      <span style="font-family:'Source Sans 3',sans-serif;font-size:1.05em;color:rgba(245,240,232,0.85);">Acquiring the culture</span>
+    </li>
+  </ul>
+
+  <aside class="notes">The gap between those numbers is not a safety issue. It is an education and access issue: Education — Acquiring the skills — Acquiring the culture.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 13: SECTION HEADER — Risks
+     ============================================================ -->
+<section class="section-header" data-background-color="#152336">
+  <div class="section-num">Part III</div>
+  <div class="gold-rule"></div>
+  <h2>The Risks of Lithium</h2>
+  <div style="text-align:center;margin-top:20px;font-family:'Playfair Display',serif;font-size:1.6em;color:var(--gold);"><span style="font-size:1.15em;">Big</span> <span style="font-size:0.85em;">and Medium</span></div>
+  <aside class="notes">Spoken intro: "I think the biggest one is the kidney — though there is room for discussion. Next is overall serum toxicity. Then pregnancy, then thyroid, then the things that people may quit for: diarrhea, tremor, acne, hair loss."</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 14: NEPHRON HUB — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_nephron_v3 (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Interactive nephron hub. Click glomerulus, proximal tubule, ascending limb, collecting duct. Key: serum level toxicity (proximal tubule, sodium story) and collecting duct toxicity are SEPARATE mechanisms requiring SEPARATE conversations. Amiloride fixes 2a and 2b but does NOT protect against level toxicity from volume depletion.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 15: PREGNANCY — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#f7f6f3">
+  <div style="height:700px;overflow:auto;padding:20px;">
+    <div class="preg-slide-inner">
+<div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#0d1b2a;line-height:1.2;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid rgba(0,0,0,0.1);">(Some of) The Updated Math of Lithium in Pregnancy</div>
+<div style="font-family:'Source Sans 3', sans-serif;padding:12px 0;">
+<div style="display:flex;gap:16px;align-items:flex-start;">
+
+  <div style="flex:1;">
+    <div style="background:#ffffff;border:0.5px solid rgba(0,0,0,0.09);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:#1a1c22;margin:0 0 8px;">The old narrative — and why it was wrong</div>
+      <div style="border-left:3px solid #A32D2D;border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0;font-size:12px;color:#5a5c66;line-height:1.5;background:#FCEBEB22;"><strong style="color:#1a1c22;text-decoration:line-through;">Lithium causes Ebstein's anomaly.</strong> Based on a voluntary registry of cases only — healthy exposed pregnancies were not reported. Relative risk was dramatically overstated.</div>
+      <div style="border-left:3px solid #3B6D11;border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0;font-size:12px;color:#5a5c66;line-height:1.5;background:#EAF3DE22;"><strong style="color:#1a1c22;">Boyle et al. 2017, Cardiology in the Young</strong> — European registry, 5+ million pregnancies, 250 cases of Ebstein's anomaly. None in lithium-exposed women. Association found with mental illness and psychotropic exposure broadly — not lithium specifically.</div>
+      <div style="border-left:3px solid #BA7517;border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0;font-size:12px;color:#5a5c66;line-height:1.5;background:#FAEEDA22;"><strong style="color:#1a1c22;">Confounding by indication.</strong> Comparing lithium-exposed women to the general population inflates apparent risk. When compared to women with similar psychiatric comorbidities not on lithium, elevated MCM risk is substantially attenuated — Fornaro et al.: OR 2.03 vs any unexposed group, 1.75 vs matched comparator group.</div>
+    </div>
+
+    <div style="background:#ffffff;border:0.5px solid rgba(0,0,0,0.09);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:#1a1c22;margin:0 0 8px;">What lithium is NOT associated with</div>
+      <ul style="margin:6px 0;padding:0;list-style:none;">
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Spontaneous abortion</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Preterm birth</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Low birth weight</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Developmental issues post in utero exposure (Poels et al. 2018)</li>
+      </ul>
+      <div style="border-left:3px solid #3B6D11;border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0;font-size:12px;color:#5a5c66;line-height:1.5;background:#EAF3DE22;">Fornaro et al. 2020, Am J Psychiatry · Poels et al. 2018, Eur Child Adolesc Psychiatry</div>
+    </div>
+
+    <div style="background:#ffffff;border:0.5px solid rgba(0,0,0,0.09);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:#1a1c22;margin:0 0 8px;">Untreated illness also carries risk</div>
+      <ul style="margin:6px 0;padding:0;list-style:none;">
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Relapse, hospitalization, poor prenatal care</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Suicide risk in untreated bipolar disorder in pregnancy is not trivial</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>In utero metabolic effects of untreated mental illness are difficult to separate from medication effects — the comparison group matters</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Poels et al. 2018: no developmental issues with lithium exposure — signal found with antipsychotics, not lithium</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Postpartum period is high relapse risk — continuation often strongly indicated</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="flex:1;">
+    <div style="background:#ffffff;border:0.5px solid rgba(0,0,0,0.09);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:#1a1c22;margin:0 0 8px;"><strong>Dose matters — MCM / CVM risk by dose range</strong></div>
+      <table style="width:100%;border-collapse:collapse;font-size:11px;margin:8px 0;table-layout:fixed;">
+        <thead><tr>
+          <th style="text-align:left;padding:6px 8px;background:#f5f5f5;font-weight:500;color:#5a5c66;border-bottom:0.5px solid rgba(0,0,0,0.09);width:36%;">Daily dose</th>
+          <th style="text-align:left;padding:6px 8px;background:#f5f5f5;font-weight:500;color:#5a5c66;border-bottom:0.5px solid rgba(0,0,0,0.09);width:40%;">MCM / CVM risk</th>
+          <th style="text-align:left;padding:6px 8px;background:#f5f5f5;font-weight:500;color:#5a5c66;border-bottom:0.5px solid rgba(0,0,0,0.09);width:24%;">NNH</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:#EAF3DE22;"><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">&lt;300mg</td><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">Comparable to non-lithium peers</td><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">—</td></tr>
+          <tr style="background:#EAF3DE22;"><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">300–600mg</td><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">Comparable to non-lithium peers</td><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">—</td></tr>
+          <tr style="background:#FCEBEB22;"><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">&gt;900mg</td><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">RR 3.2 (CI 1.47–7.02)</td><td style="padding:6px 8px;border-bottom:0.5px solid rgba(0,0,0,0.09);color:#5a5c66;">39</td></tr>
+          <tr><td style="padding:6px 8px;color:#5a5c66;">All doses combined</td><td style="padding:6px 8px;color:#5a5c66;">Modest — driven by &gt;900mg group</td><td style="padding:6px 8px;color:#5a5c66;">108</td></tr>
+        </tbody>
+      </table>
+      
+      <div style="border-left:3px solid #3B6D11;border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0;font-size:12px;color:#5a5c66;line-height:1.5;background:#EAF3DE22;">Fornaro et al. 2020, Am J Psychiatry · Patorno et al. 2017, NEJM</div>
+    </div>
+
+    <div style="background:#ffffff;border:0.5px solid rgba(0,0,0,0.09);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:#1a1c22;margin:0 0 8px;">Clinical management in pregnancy</div>
+      <ul style="margin:6px 0;padding:0;list-style:none;">
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Fetal echocardiogram at 16–20 weeks</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Monitor lithium levels frequently — volume of distribution increases in pregnancy, levels drop</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span><strong>Target lithium level &lt;0.64 mEq/L one week prior to delivery</strong> — reduces risk of neonatal hypotonia (Fornaro et al. 2020)</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span><strong>Increase levothyroxine dose by 20% in pregnancy</strong> if hypothyroid (Dickens et al. 2019, JAMA)</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Neonatal monitoring at delivery — transient effects, manageable</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Shared decision-making with obstetrics and psychiatry</li>
+      </ul>
+    </div>
+
+    <div style="background:#ffffff;border:0.5px solid rgba(0,0,0,0.09);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:#1a1c22;margin:0 0 8px;">Breastfeeding</div>
+      <ul style="margin:6px 0;padding:0;list-style:none;">
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Has been done — not automatically contraindicated, requires careful assessment</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Infant lithium levels may be higher in first 1–2 weeks, usually undetectable after that</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>May want to supplement with formula early on</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>First month infant growth can be slow — monitor weight</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;border-bottom:0.5px solid rgba(0,0,0,0.09);"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Watch for outliers with higher infant lithium levels</li>
+        <li style="font-size:12px;color:#5a5c66;padding:4px 0 4px 14px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#9a9ca6;">→</span>Consult ahead of time if possible — MC3</li>
+      </ul>
+      <div style="border-left:3px solid #3B6D11;border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0;font-size:12px;color:#5a5c66;line-height:1.5;background:#EAF3DE22;">Heinonen et al. 2022, Acta Paediatrica — 30 mother-infant dyads</div>
+    </div>
+
+    <div style="font-size:11px;color:#9a9ca6;border-top:0.5px solid rgba(0,0,0,0.09);padding-top:8px;margin-top:4px;line-height:1.6;">
+      MCM = major congenital malformation · CVM = cardiovascular malformation<br>
+      Boyle et al. 2017, Cardiology in the Young · Fornaro et al. 2020, Am J Psychiatry · Patorno et al. 2017, NEJM · Dickens et al. 2019, JAMA · Poels et al. 2018, Eur Child Adolesc Psychiatry · Heinonen et al. 2022, Acta Paediatrica
+    </div>
+  </div>
+
+</div>
+</div>
+
+    </div>
+  </div>
+  <aside class="notes">Pregnancy: Ebstein's risk overstated — Boyle 2017 5M pregnancies, 250 Ebstein's, none in lithium-exposed. Confounding by indication. Fornaro: OR 2.03 vs unexposed, 1.75 vs matched (200 covariates). Not associated with SA/preterm/low birth weight/developmental issues. Dose table: &lt;300mg and 300-600mg comparable to peers, &gt;900mg NNH 39. Breastfeeding: has been done, Heinonen 2022 30 dyads.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 16: THYROID — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_thyroid (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">10% background, 18% on lithium. Target TSH &lt;2, push toward 1 if mood symptoms persist. Do NOT apply general population threshold (5/7/10) to mood disorder patients. Subclinical hypothyroidism contributes to treatment resistance. Treatment: levothyroxine. Not a reason to stop.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 17: TREMOR — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_tremor (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Fine postural tremor. Check baseline — your only reference point. Valproate and lamotrigine worsen it. Management: reassure/lower dose → propranolol 10mg BID. Important differential: drug-induced parkinsonism (resting, pill-rolling) vs lithium/essential (postural, fine).</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 18: SKIN AND CALCIUM — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_skin_calcium (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Skin: acne (mention before starting), hair thinning (minoxidil), psoriasis (ask history, refer derm, not automatic stop). Calcium: ~4% high estimate, lithium shifts setpoint, usually asymptomatic. Screen q6-12 months. If calcium AND PTH both elevated → refer endocrine. May require parathyroidectomy. Not reversible with dose reduction.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 19: SECTION HEADER — How to Prescribe
+     ============================================================ -->
+<section class="section-header" data-background-color="#152336">
+  <div class="section-num">Part IV</div>
+  <div class="gold-rule"></div>
+  <h2>The How<br>of Dosing</h2>
+  <aside class="notes">Spoken intro before formulations slide.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 20: FORMULATIONS AND DOSING — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_formulations_dosing (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">No minimum dose (Ghaemi). 150mg IR at bedtime. Once daily — timing matters only for checking a level. Observe: 2-month minimum window. Titrate toward 0.6-0.75 mEq/L if not responding. At 150-300mg: no level required. Clinical effect may lag 10 days after dose change including reductions. Elderly and frail: start lower, check earlier.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 11: VERY LOW DOSE / OTC — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#f7f6f3">
+  <iframe src="lithium_very_low_dose.html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">OTC lithium orotate. 5mg orotate ≈ 25mg carbonate. For cautious starters, migraineurs, patients who want to test the waters. "The biology does not require a prescription dose to begin."</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 21: SECTION HEADER — Modern Day Monitoring
+     ============================================================ -->
+<section class="section-header" data-background-color="#152336">
+  <div class="section-num">Part V</div>
+  <div class="gold-rule"></div>
+  <h2>Modern Day<br>Monitoring</h2>
+  <div class="section-sub">Insulin and warfarin have sick day rules. So does lithium. Establish the plan at prescribing.</div>
+  <aside class="notes">Spoken intro before monitoring slides.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 22: MONITORING PROTOCOL — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#f7f6f3">
+  <iframe src="lithium_monitoring (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">TSH: baseline, 3 months, q6 months. Creatinine: baseline, q6-12 months. Calcium: q6-12 months. Levels: not required at 150-300mg. Check after 5 days minimum post dose change approaching 0.4+. Stable: q6 months. Polyuria / polydipsia: early collecting duct signal, NOT nuisance. EMUO &lt;300 = collecting duct signal → amiloride consideration.</aside>
+</section>
+
+
+
+<!-- ============================================================
+     SLIDE 24: WHO THE PATIENT IS
+     ============================================================ -->
+<section class="bridge-slide dark-slide" style="padding:60px 80px;display:flex;flex-direction:column;justify-content:center;">
+  <div class="spoken-label">Who the Patient Is</div>
+  <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.6em;line-height:1.7;font-weight:700;">Intensity. Intractability. Recurrence. Irritability. History of hospitalization. Prior adverse reaction to SSRI. Substance use. Family history of bipolar. Onset in youth. Seasonal Affective Disorder. PMDD. Postpartum depression. Suicidal ideation. Family history of recurrent depression. Only partially better with SSRI.</h3>
+  <aside class="notes">All run together as one continuous statement — the pattern of who might benefit from lithium.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 25: INDICATIONS — THE BAR IS LOWER
+     ============================================================ -->
+<section class="bridge-slide dark-slide">
+  <div class="spoken-label">Indications</div>
+  <h3>The Bar Is Lower Than You Think</h3>
+  <p>Recurrent depression, resistant depression, incompletely treated depression, chronic suicidal ideation — or even just the shadow of bipolar. Enough to offer lithium as a possible option. Not the only answer.</p>
+  <p style="margin-top:24px;text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:1.1em;color:var(--gold-light);letter-spacing:0.03em;white-space:nowrap;">But for the right person, a life&#8209;altering one.</p>
+  <aside class="notes">Spoken entirely.</aside>
+</section>
+
+<!-- ============================================================
+     NNT SLIDE
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#ffffff">
+  <iframe src="lithium_nnt_slide_v2 (1).html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">NNT slide — evidence comparison across augmentation strategies.</aside>
+</section>
+
+<!-- ============================================================
+     SECTION HEADER — Primary Care and Lithium
+     ============================================================ -->
+<section class="section-header" data-background-color="#152336">
+  <div class="section-num">Part VI</div>
+  <div class="gold-rule"></div>
+  <h2>Primary Care<br>and Lithium</h2>
+  <div class="section-sub">Lithium is a tool that might benefit far more patients than there are psychiatric providers to see them.</div>
+  <aside class="notes">Permission structure section.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 28: WHY US
+     ============================================================ -->
+<section class="why-you-slide dark-slide">
+  <h2>Why Us</h2>
+  <div class="why-you-quote">
+    <p>We already are a community.</p>
+  </div>
+  <aside class="notes">Spoken: We already are a community.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 5: SKÖLD COUNTY CHART — iframe widget
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#f7f6f3">
+  <iframe src="lithium_skold_county_chart.html" style="width:100%;height:700px;border:none;"></iframe>
+  <aside class="notes">Sköld 2021 BipoläR registry. Swedish counties: 37–85% of bipolar patients receiving lithium. United States: ~15%. The gap is not a safety issue. It is an education and access issue.</aside>
+</section>
+
+<!-- ============================================================
+     WHY US — SECOND INSTANCE
+     ============================================================ -->
+<section class="why-you-slide dark-slide">
+  <h2>Why Us</h2>
+  <div class="why-you-quote">
+    <p>We can develop our own culture around lithium use.</p>
+  </div>
+  <aside class="notes">Spoken: We can develop our own culture around lithium use.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 29: CLOSING
+     ============================================================ -->
+<section class="closing-slide dark-slide">
+  <h2>The Long Game</h2>
+  
+  <aside class="notes">Full merged closing — spoken. This is the final clinical statement before references.</aside>
+</section>
+
+<!-- ============================================================
+     SLIDE 30: REFERENCES
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#f7f6f3">
+  <iframe src="lithium_references_slide.html" style="width:100%;height:700px;border:none;background:#f7f6f3;"></iframe>
+  <aside class="notes">References — three embedded book covers: Meyer &amp; Stahl Lithium Handbook, Aiken Difficult to Treat Depression, Ghaemi Lithium Masterclass.</aside>
+</section>
+
+<!-- ============================================================
+     OFFICE HOURS
+     ============================================================ -->
+<section class="light-slide" style="padding:80px 100px;display:flex;flex-direction:column;justify-content:center;background:#f7f6f3 !important;">
+  <div style="font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:var(--navy);opacity:0.5;margin-bottom:20px;">Continuing the Conversation</div>
+  <div style="width:60px;height:2px;background:var(--navy);opacity:0.2;margin-bottom:28px;"></div>
+  <h2 style="font-family:'Playfair Display',serif;color:var(--navy);font-size:2.2em;line-height:1.2;margin-bottom:32px;">Lithium Office Hours</h2>
+  <div style="font-family:'Source Sans 3',sans-serif;font-size:1.2em;color:var(--text-dark);line-height:1.7;margin-bottom:16px;">
+    Every Monday · 5:00 PM · Microsoft Teams
+  </div>
+  <div style="font-family:'Source Sans 3',sans-serif;font-size:1.0em;color:var(--muted);line-height:1.7;margin-bottom:40px;">
+    Office hours for lithium related questions.
+  </div>
+  <div style="display:inline-flex;align-items:center;gap:12px;background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:16px 24px;max-width:520px;">
+    <span style="font-size:1.4em;">💬</span>
+    <span style="font-family:'Source Sans 3',sans-serif;font-size:0.95em;color:var(--text-dark);line-height:1.5;">Message me directly on Teams if you would like an invite to that meeting.</span>
+  </div>
+  <aside class="notes">Office hours every Monday at 5pm on Teams. Message directly for an invite.</aside>
+</section>
+
+<!-- ============================================================
+     REFERENCES 1 OF 2
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#0d1b2a">
+  <iframe src="lithium_references_1.html" style="width:100%;height:700px;border:none;background:#0d1b2a;"></iframe>
+  <aside class="notes">References 1 of 2 — Efficacy and Evidence.</aside>
+</section>
+
+<!-- ============================================================
+     REFERENCES 2 OF 2
+     ============================================================ -->
+<section class="widget-slide" data-background-color="#0d1b2a">
+  <iframe src="lithium_references_2.html" style="width:100%;height:700px;border:none;background:#0d1b2a;"></iframe>
+  <aside class="notes">References 2 of 2 — Safety, Monitoring and Special Populations.</aside>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: true,
+  transition: 'slide',
+  transitionSpeed: 'fast',
+  controls: true,
+  progress: true,
+  center: false,
+  width: 1200,
+  height: 700,
+  margin: 0,
+  plugins: []
+});
+</script>
+</body>
+</html>

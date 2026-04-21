@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithium — Regional Variation in Prescribing (Sköld 2021)</title>
+<style>
+:root {
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --text: #1a1c22;
+  --muted: #5a5c66;
+  --border: rgba(0,0,0,0.09);
+  --bar: #2D4B9E;
+  --bar-high: #1D9E75;
+  --bar-low: #C0392B;
+  --bar-mid: #4A72C4;
+  --li: #1D9E75;
+  --li-light: rgba(29,158,117,0.10);
+  --li-mid: rgba(29,158,117,0.30);
+  --amber: #BA7517;
+  --amber-light: rgba(186,117,23,0.10);
+  --amber-mid: rgba(186,117,23,0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.slide {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 26px 30px 18px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.title-block h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.title-block .sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 9px 0 14px;
+}
+
+/* ---- CHART AREA ---- */
+.chart-container {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px 12px;
+  margin-bottom: 12px;
+}
+
+.chart-inner {
+  position: relative;
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding-bottom: 48px;
+  border-bottom: 1.5px solid #ddd;
+  border-left: 1.5px solid #ddd;
+}
+
+.y-axis-label {
+  position: absolute;
+  left: -48px;
+  top: 50%;
+  transform: rotate(-90deg) translateX(50%);
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0.5px;
+  background: rgba(0,0,0,0.07);
+}
+
+.gridline-label {
+  position: absolute;
+  left: -28px;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  color: var(--muted);
+  transform: translateY(50%);
+}
+
+.bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+  cursor: default;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  transition: opacity 0.15s;
+}
+
+.bar:hover { opacity: 0.85; }
+
+.bar-val {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bar-label {
+  position: absolute;
+  bottom: -46px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+  transform-origin: top center;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ---- CALLOUT ROW ---- */
+.callout-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.callout-box {
+  border-radius: 8px;
+  padding: 9px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.callout-box.green { background: var(--li-light); border: 0.5px solid var(--li-mid); }
+.callout-box.amber { background: var(--amber-light); border: 0.5px solid var(--amber-mid); }
+.callout-box.blue { background: rgba(24,95,165,0.08); border: 0.5px solid rgba(24,95,165,0.22); }
+
+.callout-label {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.callout-label.green { color: var(--li); }
+.callout-label.amber { color: var(--amber); }
+.callout-label.blue { color: #185FA5; }
+
+.callout-num {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+.callout-num.green { color: var(--li); }
+.callout-num.amber { color: var(--amber); }
+.callout-num.blue { color: #185FA5; }
+
+.callout-text {
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.footnote {
+  font-size: 9.5px;
+  color: var(--muted);
+  font-family: 'Helvetica Neue', sans-serif;
+  border-top: 0.5px solid var(--border);
+  padding-top: 8px;
+  line-height: 1.55;
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="header">
+    <div class="title-block">
+      <h1>Lithium prescribing varies dramatically — even within a single country</h1>
+      <div class="sub">Proportion of bipolar patients receiving lithium treatment by Swedish county · n=14,616 · BipoläR national registry</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CHART -->
+  <div class="chart-container">
+    <div style="position:relative; padding-left: 36px;">
+      <div class="chart-inner" id="chart">
+
+        <!-- Gridlines -->
+        <div class="gridline" style="bottom: calc(30% * (232/232));">
+          <span class="gridline-label">90%</span>
+        </div>
+        <div class="gridline" style="bottom: calc(232px * 0.667);">
+          <span class="gridline-label">70%</span>
+        </div>
+        <div class="gridline" style="bottom: calc(232px * 0.444);">
+          <span class="gridline-label">50%</span>
+        </div>
+        <div class="gridline" style="bottom: calc(232px * 0.222);">
+          <span class="gridline-label">30%</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CALLOUT ROW -->
+  <div class="callout-row">
+    <div class="callout-box green">
+      <div class="callout-label green">Highest — Gotland</div>
+      <div class="callout-num green">85%</div>
+      <div class="callout-text">Of bipolar patients receiving lithium. Counties with high prescribing showed significantly lower recurrence rates.</div>
+    </div>
+    <div class="callout-box amber">
+      <div class="callout-label amber">Lowest — Uppsala</div>
+      <div class="callout-num amber">37%</div>
+      <div class="callout-text">More than a 2× difference between highest and lowest county — same country, same guidelines, same drug.</div>
+    </div>
+    <div class="callout-box blue">
+      <div class="callout-label blue">United States estimate</div>
+      <div class="callout-num blue">~15%</div>
+      <div class="callout-text">Estimated proportion of eligible bipolar patients offered lithium in the US — below even the lowest Swedish county.</div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Data: Sköld M, Rolstad S, Joas E, et al. Regional lithium prescription rates and recurrence in bipolar disorder. Int J Bipolar Disord. 2021;9:18. doi:10.1186/s40345-021-00223-7. n=14,616 patients with bipolar I, II, or NOS from the Swedish national quality register BipoläR. Bar values read from published Figure 1; approximate ±1–2%. Higher regional lithium use was associated with lower regional recurrence odds for manic, hypomanic, and depressive episodes after adjustment for confounders. US ~15% estimate: adapted from Aiken, Difficult to Treat Depression (Carlat Guide).
+  </div>
+
+</div>
+
+<script>
+const data = [
+  { county: 'Gotland',        pct: 85 },
+  { county: 'Jönköping',     pct: 73 },
+  { county: 'Östergötland',  pct: 70 },
+  { county: 'Södermanland',  pct: 62 },
+  { county: 'Dalarna',       pct: 62 },
+  { county: 'Blekinge',      pct: 61 },
+  { county: 'Kalmar',        pct: 57 },
+  { county: 'Västernorrland',pct: 57 },
+  { county: 'Jämtland',      pct: 56 },
+  { county: 'Stockholm',     pct: 56 },
+  { county: 'Västerbotten',  pct: 55 },
+  { county: 'Halland',       pct: 54 },
+  { county: 'Kronoberg',     pct: 53 },
+  { county: 'Västmanland',   pct: 53 },
+  { county: 'Västra Götaland',pct: 52 },
+  { county: 'Örebro',        pct: 49 },
+  { county: 'Gävleborg',     pct: 47 },
+  { county: 'Norrbotten',    pct: 46 },
+  { county: 'Skåne',         pct: 41 },
+  { county: 'Värmland',      pct: 39 },
+  { county: 'Uppsala',       pct: 37 },
+];
+
+const chartEl = document.getElementById('chart');
+const maxPct = 90;
+const chartHeight = 232;
+
+data.forEach((d, i) => {
+  const heightPx = (d.pct / maxPct) * chartHeight;
+  
+  let color;
+  if (d.pct >= 70) color = '#1D9E75';
+  else if (d.pct >= 55) color = '#2D4B9E';
+  else if (d.pct >= 45) color = '#4A72C4';
+  else color = '#C0392B';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'bar-wrap';
+
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  bar.style.height = heightPx + 'px';
+  bar.style.background = color;
+
+  const val = document.createElement('div');
+  val.className = 'bar-val';
+  val.style.color = color;
+  val.textContent = d.pct + '%';
+
+  const label = document.createElement('div');
+  label.className = 'bar-label';
+  label.textContent = d.county;
+
+  bar.appendChild(val);
+  wrap.appendChild(bar);
+  wrap.appendChild(label);
+  chartEl.appendChild(wrap);
+});
+</script>
+</body>
+</html>

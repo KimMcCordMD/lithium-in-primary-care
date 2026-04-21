@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithium — Antisuicidal Evidence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e8e6df; font-family: 'Source Sans 3', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  .deck { display: flex; flex-direction: column; height: 100vh; padding: 18px 28px 12px; }
+  .slide-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; flex-shrink: 0; }
+  .slide-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #f5f0e8; line-height: 1.2; }
+  .slide-title strong { color: #c9a84c; }
+  .slide-meta { font-size: 10px; color: #666; text-align: right; line-height: 1.5; }
+  .divider { height: 1px; background: rgba(255,255,255,0.07); margin: 6px 0 10px; flex-shrink: 0; }
+  .tog-row { display: flex; gap: 6px; margin-bottom: 8px; flex-shrink: 0; flex-wrap: wrap; }
+  .tog { font-family: 'Source Sans 3', sans-serif; font-size: 10px; padding: 4px 11px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.18); background: transparent; color: #aaa; cursor: pointer; transition: all 0.15s; }
+  .tog.active { background: rgba(201,168,76,0.18); border-color: #c9a84c; color: #e8d080; }
+  .tog:hover { border-color: #888; color: #ddd; }
+  .chart-wrap { flex: 1; min-height: 0; position: relative; }
+  .chart-wrap canvas { width: 100% !important; height: 100% !important; }
+  .detail-panel { min-height: 50px; background: rgba(26,107,154,0.13); border-left: 3px solid #1a6b9a; border-radius: 0 5px 5px 0; padding: 7px 12px; font-size: 11px; color: #8bb8d4; line-height: 1.6; margin: 6px 0 3px; flex-shrink: 0; }
+  .footnote { font-size: 9.5px; color: #444; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px; margin-top: 2px; line-height: 1.5; flex-shrink: 0; }
+  .legend-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; flex-shrink: 0; }
+  .leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #888; }
+  .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <div class="slide-header">
+    <div class="slide-title">Antisuicidal Evidence — <strong>Comparing Agents</strong></div>
+    <div class="slide-meta">
+      OR &lt;1.0 = protective · OR &gt;1.0 = potential harm<br>
+      Bubble size = patient-years of evidence
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="tog-row" id="tog-row">
+    <button class="tog active" onclick="setView('all',this)">All endpoints</button>
+    <button class="tog" onclick="setView('completed',this)">Completed suicide</button>
+    <button class="tog" onclick="setView('attempts',this)">Suicide attempts</button>
+    <button class="tog" onclick="setView('ideation',this)">Suicidal ideation</button>
+  </div>
+
+  <div class="legend-row">
+    <div class="leg-item"><div class="leg-dot" style="background:#5a9fd4;"></div>Lithium</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#9b6fc7;"></div>SGAs (mood disorders)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#7fc97f;"></div>Clozapine</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#f0a050;"></div>Esketamine</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#60b8a0;"></div>SSRI — adults ≥25</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#e06060;"></div>SSRI — adults ≤24</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#8888aa;"></div>Valproate</div>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="detail-panel" id="detail">
+    <span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span>
+  </div>
+
+  <div class="footnote" id="footnote">
+    Lithium: Baldessarini &amp; Tondo 2006 (registry, ~110,000 pt-yrs); Tondo &amp; Baldessarini 2024 (13 RCTs, OR=0.491, p&lt;0.01); Nabi 2022 (contested). SGA: Yerevanian 2007; clozapine FDA approval 2002. SSRI: FDA meta-analysis 372 RCTs; Coupland 2015. Esketamine: FDA approval 2019, ASPIRE studies. Valproate: Gibbons 2009. Dashed line = OR 1.0 (no effect). Y-axis = data quality confidence (1=case report → 5=large registry/meta-analysis).
+  </div>
+
+</div>
+
+<script>
+const palette = {
+  li:       '#5a9fd4',
+  sga:      '#9b6fc7',
+  cloz:     '#7fc97f',
+  esk:      '#f0a050',
+  ssri_ok:  '#60b8a0',
+  ssri_harm:'#e06060',
+  val:      '#8888aa',
+};
+
+const allData = {
+  completed: [
+    { agent:'Lithium — registry\n(bipolar + unipolar)', x:0.13, y:4.8, r:55, col:palette.li,
+      detail:'Baldessarini & Tondo 2006 meta-analysis. ~110,000 pt-yrs. Crude rates 0.56%/yr on lithium vs 2.64%/yr off — approximately 5-fold lower risk. Most consistent antisuicidal signal in all of psychiatry. Replicated across Scandinavian registries, Finnish national data (Tiihonen 2017 HR=0.31).' },
+    { agent:'Lithium — RCTs\n(TRD/bipolar)', x:0.61, y:3.2, r:18, col:palette.li,
+      detail:'Tondo & Baldessarini 2024 (13 RCTs, n=3,836): OR=0.491 (CI 0.278–0.864), p<0.01 — statistically significant. Earlier Nabi 2022 meta-analysis: OR=0.41 (nonsignificant) — contested by Ghaemi on methodological grounds (excluded pre-2000 trials, zero-event inflation). RCTs are structurally underpowered to detect completed suicide — events too rare. Type II error problem made visible.' },
+    { agent:'Clozapine\n(schizophrenia)', x:0.24, y:4.5, r:28, col:palette.cloz,
+      detail:'Only FDA-approved medication for suicidality reduction (schizophrenia/schizoaffective). Meltzer 2003 InterSePT trial: 26% reduction in suicidal behavior vs olanzapine. Robust signal but limited to schizophrenia population — extrapolation to mood disorders not established.' },
+    { agent:'SGA — mood disorders\n(non-clozapine)', x:0.85, y:2.8, r:14, col:palette.sga,
+      detail:'Yerevanian 2007: SGAs as monotherapy in bipolar disorder may be associated with INCREASED suicidality vs lithium. Non-significant reduction vs placebo in mood disorder RCTs. Some studies suggest harm signal for SGA monotherapy without concurrent mood stabilizer. Signal very different from schizophrenia data.' },
+    { agent:'Valproate\n(bipolar)', x:0.72, y:3.0, r:16, col:palette.val,
+      detail:'Gibbons 2009 (Medicaid claims, ~47,000 pt-yrs): valproate associated with reduced suicide attempt rates vs no mood stabilizer (HR~0.60). Weaker and less consistent than lithium signal. No RCT data for antisuicidal effect specifically. Some registry data suggests lithium superior to valproate for suicide prevention.' },
+    { agent:'SSRI\n(adults ≥25)', x:0.98, y:3.5, r:20, col:palette.ssri_ok,
+      detail:'FDA meta-analysis 372 RCTs: no significant harm or benefit for completed suicide in adults 25–64. Adults ≥65: apparent protective effect. TRD-specific data sparse — most evidence from first-trial MDD. Net neutral in adult population outside the under-25 harm window.' },
+    { agent:'SSRI\n(adults ≤24)', x:1.55, y:3.8, r:16, col:palette.ssri_harm,
+      detail:'FDA RCT meta-analysis: statistically significant increased suicidality signal in adults ≤24. Confirmed across multiple independent analyses. Risk concentrated in first 4 weeks of treatment — activation syndrome window. C-SSRS data from subsequent RCTs supports the finding. Does not apply to typical TRD augmentation population (adults >24).' },
+  ],
+  attempts: [
+    { agent:'Lithium — registry', x:0.20, y:4.8, r:52, col:palette.li,
+      detail:'Tondo et al. 2001 pooled registry: ~5-fold lower attempt rates on lithium. Baldessarini 2006: 0.56%/yr vs 2.64%/yr (combined attempts + completions). Signal consistent across bipolar and unipolar recurrent depression. Strongest attempt-reduction evidence of any mood stabilizer.' },
+    { agent:'Lithium — RCTs', x:0.73, y:3.2, r:16, col:palette.li,
+      detail:'Nabi 2022: OR=1.13 for attempts (nonsignificant, CI 0.60–2.14) — unfavorable direction, contested by Ghaemi. Tondo & Baldessarini 2024 combined endpoint (attempts + completions): OR=0.491, p<0.01. RCT attempt data hampered by small event counts and subtherapeutic levels in many trials.' },
+    { agent:'SGA — mood disorders', x:0.90, y:2.5, r:12, col:palette.sga,
+      detail:'Mixed signal in mood disorder populations. Quetiapine and aripiprazole augmentation RCTs: modest non-significant reductions in attempt rates. Non-clozapine SGAs as monotherapy in bipolar: possible harm signal in some registry analyses. Not a strong antisuicidal signal for attempts in mood disorders.' },
+    { agent:'Esketamine\n(TRD + acute ideation)', x:0.55, y:3.2, r:18, col:palette.esk,
+      detail:'ASPIRE I and II (n=230 + 227): esketamine nasal spray significantly reduced MADRS suicidal ideation item vs placebo at 24 hours (primary endpoint). Reduction in attempt rates not separately powered. FDA approval 2020 for TRD with acute suicidal ideation. Rapid onset (hours) — useful for acute crisis context; durability beyond 4 weeks less established.' },
+    { agent:'SSRI\n(adults ≥25)', x:1.02, y:3.2, r:18, col:palette.ssri_ok,
+      detail:'Largely neutral for attempts in adults 25–64. Coupland 2015 large UK cohort: no significant excess attempt risk in adults. Some short-term activation risk in first 4 weeks — shared with younger adults but at lower magnitude.' },
+    { agent:'SSRI\n(adults ≤24)', x:1.65, y:3.6, r:15, col:palette.ssri_harm,
+      detail:'FDA black box: significant increased suicidality including attempts in adults ≤24 in RCT meta-analysis. Monitor closely in first 4 weeks. TRD context: most augmentation patients are adults >24 — harm signal less applicable, but document age at initiation.' },
+    { agent:'Valproate', x:0.68, y:2.8, r:14, col:palette.val,
+      detail:'Gibbons 2009 Medicaid: HR~0.60 for attempts vs no mood stabilizer. Weaker than lithium signal. Patorno 2010: lithium superior to valproate for attempt prevention in bipolar disorder (HR 0.69 favoring lithium). Valproate is a reasonable second choice when lithium is not tolerated.' },
+  ],
+  ideation: [
+    { agent:'Lithium — registry\n+ RCTs', x:0.35, y:4.5, r:45, col:palette.li,
+      detail:'Large registry data and RCT sub-analyses consistently show lithium reduces suicidal ideation across bipolar and recurrent unipolar. C-SSRS scores lower in lithium arms. Harder to standardize than behavioral endpoints but magnitude aligns with attempt/completion data. Clinically — patients frequently report unprompted: "I am not thinking about suicide anymore."' },
+    { agent:'SGA — ideation\n(bipolar/MDD RCTs)', x:0.65, y:2.6, r:13, col:palette.sga,
+      detail:'Best SGA signal in mood disorders. Quetiapine and aripiprazole augmentation RCTs show significant reductions in suicide rating scale items in MDD and bipolar depression. This is the strongest case for SGA antisuicidal effect in mood disorders — but note it does not translate to reduced attempts or completions in pooled analyses.' },
+    { agent:'Esketamine\n(acute SI, TRD)', x:0.45, y:3.5, r:22, col:palette.esk,
+      detail:'Strongest acute ideation signal of any agent. ASPIRE studies: significant reduction in MADRS ideation item at 4 and 24 hours. FDA-approved specifically for TRD with acute suicidal ideation or behavior. Rapid onset within hours is clinically distinct from all other agents. Durability beyond 4 weeks requires maintenance. Not a substitute for safety planning.' },
+    { agent:'SSRI\n(adults ≥25)', x:0.95, y:3.4, r:18, col:palette.ssri_ok,
+      detail:'Net neutral per FDA meta-analysis in adults 25–64. No significant harm or benefit for ideation specifically. Adults ≥65: clear protective signal. TRD-specific data sparse — most evidence from first-trial MDD populations.' },
+    { agent:'SSRI\n(adults ≤24)', x:1.55, y:3.8, r:20, col:palette.ssri_harm,
+      detail:'Statistically significant in FDA RCT meta-analysis. Confirmed signal across multiple independent analyses. Risk concentrated in first month — activation syndrome window. C-SSRS data from subsequent RCTs supports the finding. Clinically: monitor closely in first 4 weeks, especially in young adults initiating or changing antidepressants.' },
+    { agent:'Clozapine\n(schizophrenia)', x:0.28, y:4.2, r:22, col:palette.cloz,
+      detail:'Strong ideation reduction signal in schizophrenia — the original basis for FDA antisuicidal indication. Meltzer InterSePT 2003. Limited mood disorder data. Requires REMS (ANC monitoring). Not typically used in primary care or mood disorder augmentation outside specialist settings.' },
+    { agent:'Valproate', x:0.75, y:2.6, r:12, col:palette.val,
+      detail:'Limited specific ideation data. Registry data suggests some protection vs no mood stabilizer. Weaker than lithium for ideation specifically. One meta-analysis found lithium significantly superior to valproate for suicide-related outcomes in bipolar disorder.' },
+  ],
+};
+
+// "all" view = deduplicated union
+function getData(view) {
+  if (view === 'all') {
+    const seen = {};
+    const out = [];
+    for (const arr of Object.values(allData)) {
+      for (const d of arr) {
+        if (!seen[d.agent]) { seen[d.agent] = true; out.push(d); }
+      }
+    }
+    return out;
+  }
+  return allData[view];
+}
+
+const footnotes = {
+  all: 'All endpoints combined. Bubble size = patient-years. Y-axis = data quality confidence (1=case series → 5=large registry). Dashed line OR=1.0. SGA restricted to bipolar/MDD populations. Sources: Baldessarini 2006, Tondo 2001, Tondo & Baldessarini 2024; Meltzer 2003 (clozapine); ASPIRE I/II (esketamine); FDA meta-analysis 372 RCTs, Coupland 2015 (SSRI); Gibbons 2009, Patorno 2010 (valproate).',
+  completed: 'Completed suicide endpoint. RCTs structurally underpowered — events too rare. Registry data carries the strongest signal. Type II error is the most likely explanation for null RCT findings. Tondo & Baldessarini 2024 combined endpoint OR=0.491, p<0.01.',
+  attempts: 'Suicide attempt endpoint. Lithium registry signal strongest and most consistent. Esketamine: ASPIRE studies powered for ideation, not attempts. SSRI harm signal concentrated in ≤24yo and first 4 weeks.',
+  ideation: 'Suicidal ideation endpoint. Esketamine has the strongest acute (4–24 hour) ideation signal. Lithium has the most consistent long-term signal. SGA ideation benefit in mood disorders does not appear to translate to attempt or completion reduction.',
+};
+
+let currentView = 'all';
+let chart;
+
+function buildDatasets(view) {
+  const data = getData(view);
+  return data.map(d => ({
+    label: d.agent,
+    data: [{ x: d.x, y: d.y, r: d.r, agent: d.agent, detail: d.detail }],
+    backgroundColor: d.col + 'bb',
+    borderColor: d.col,
+    borderWidth: 1.5,
+  }));
+}
+
+function buildChart() {
+  const ctx = document.getElementById('chart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'bubble',
+    data: { datasets: buildDatasets(currentView) },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: function(context) {
+            const panel = document.getElementById('detail');
+            if (!panel) return;
+            if (context.tooltip.opacity === 0) {
+              panel.innerHTML = '<span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span>';
+              return;
+            }
+            const d = context.tooltip.dataPoints?.[0]?.raw;
+            if (!d) return;
+            panel.innerHTML = '<strong style="color:#c9a84c;">' + d.agent.replace('\n', ' ') + '</strong> &nbsp;·&nbsp; <span style="color:#a8b8d0;">OR: ' + d.x + '</span><br><span style="color:#8bb8d4;">' + d.detail + '</span>';
+          }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: {
+          min: 0, max: 2.2,
+          title: { display: true, text: 'Odds Ratio vs comparator  (< 1.0 = protective  ·  > 1.0 = potential harm)', color: '#888', font: { family: "'Source Sans 3', sans-serif", size: 10, weight: '600' } },
+          ticks: { color: '#888', font: { size: 10 }, callback: v => v.toFixed(1) },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          border: { color: 'rgba(255,255,255,0.1)' }
+        },
+        y: {
+          min: 1, max: 5.5,
+          title: { display: true, text: 'Data quality confidence', color: '#888', font: { family: "'Source Sans 3', sans-serif", size: 10, weight: '600' } },
+          ticks: { display: false },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          border: { color: 'rgba(255,255,255,0.1)' }
+        }
+      }
+    },
+    plugins: [{
+      id: 'refLine',
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const xScale = chart.scales.x;
+        const yScale = chart.scales.y;
+        const x = xScale.getPixelForValue(1.0);
+        ctx.save();
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x, yScale.top);
+        ctx.lineTo(x, yScale.bottom);
+        ctx.stroke();
+        ctx.restore();
+        // Labels inside chart
+        ctx.save();
+        ctx.font = '9px Source Sans 3, sans-serif';
+        ctx.fillStyle = 'rgba(90,159,212,0.6)';
+        ctx.fillText('← Protective', x - 80, yScale.top + 14);
+        ctx.fillStyle = 'rgba(224,96,96,0.6)';
+        ctx.fillText('Potential harm →', x + 8, yScale.top + 14);
+        ctx.restore();
+        // Bubble labels
+        chart.data.datasets.forEach((ds, i) => {
+          const meta = chart.getDatasetMeta(i);
+          meta.data.forEach(pt => {
+            const raw = pt.$context.raw;
+            const label = (raw.agent || '').split('\n')[0];
+            ctx.save();
+            ctx.font = '9px Source Sans 3, sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.75)';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, pt.x, pt.y + 3);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
+}
+
+function setView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.tog').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  chart.data.datasets = buildDatasets(view);
+  chart.update();
+  document.getElementById('footnote').textContent = footnotes[view];
+  document.getElementById('detail').innerHTML = '<span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span>';
+}
+
+buildChart();
+</script>
+</body>
+</html>

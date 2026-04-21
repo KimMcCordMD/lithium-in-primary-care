@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Lithium — Study Design Methods</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; max-width: 960px; margin: 0 auto; color: #222; background: #fff; }
+  .two-col { display: flex; gap: 16px; }
+  .two-col > div { flex: 1; }
+  .card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .card-title { font-size: 13px; font-weight: 500; margin: 0 0 8px; }
+  .cal { border-left: 3px solid; border-radius: 0 6px 6px 0; padding: 8px 12px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #444; }
+  .cb { border-color: #185FA5; background: #E6F1FB44; }
+  .cp { border-color: #534AB7; background: #EEEDFE44; }
+  .co { border-color: #BA7517; background: #FAEEDA44; }
+  .cg { border-color: #3B6D11; background: #EAF3DE44; }
+  .footnote { font-size: 11px; color: #999; border-top: 0.5px solid #eee; padding-top: 8px; margin-top: 8px; line-height: 1.5; }
+</style></head><body>
+<div class="two-col">
+  <div>
+    <div class="card">
+      <div class="card-title">Propensity score matching</div>
+      <div class="cal cb">A statistical technique that creates a matched comparison group with similar baseline characteristics — age, diagnosis, comorbidities, prior medication exposure — to control for confounding by indication. Applies to both cross-sectional and longitudinal studies.</div>
+      <div class="cal cb"><strong>Preadjusts for variables that randomization would have distributed by chance.</strong> The result approximates what a randomized trial would produce — for all measured confounders. Unmeasured confounders remain a limitation.</div>
+      <div class="cal cb"><strong>Why it matters for lithium studies:</strong> Patients on lithium have more severe illness. Comparing them to patients not on lithium without matching inflates apparent risk and deflates apparent benefit. When propensity matching is applied, risk signals attenuate and benefit signals become more credible.</div>
+      <div class="cal cg"><strong>Fornaro et al. 2020 (pregnancy data)</strong> — propensity model included 200 covariates. One of the most thoroughly adjusted observational studies in the lithium pregnancy literature. The attenuated MCM risk findings (OR 1.75 vs matched comparator) reflect that rigor.</div>
+      <div class="cal co"><strong>The limitation:</strong> Only controls for measured confounders. Unmeasured variables remain. Mirror image design sidesteps this entirely.</div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-title">Mirror image design</div>
+      <div class="cal cp">A longitudinal study design in which each patient serves as their own control. The period before starting lithium is compared to the period after — same person, same baseline vulnerability, same life circumstances.</div>
+      <div class="cal cp"><strong>Why it matters for lithium studies:</strong> Eliminates between-person confounding entirely. Used extensively in lithium maintenance and relapse prevention literature. When a patient has fewer hospitalizations, fewer relapses, and fewer suicide attempts after starting lithium than before — in the same individual — that signal is difficult to attribute to anything other than the medication.</div>
+      <div class="cal co"><strong>The problem it solves:</strong> "Lithium patients are sicker" — true, but irrelevant when the patient is their own control. The comparison is within-person, not between groups.</div>
+    </div>
+  </div>
+</div>
+<div class="footnote">Both designs address confounding by indication — the systematic problem that makes observational psychiatric medication research difficult to interpret without understanding the methodology. When lithium studies use either approach, the findings are substantially more credible than naive comparisons to untreated controls.</div>
+</body></html>

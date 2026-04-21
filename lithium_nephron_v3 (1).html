@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Lithium — Nephron Interactive</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; background: #fff; color: #222; padding: 16px; max-width: 980px; margin: 0 auto; }
+.detail-wrap { border-top: 1px solid #eee; padding-top: 14px; margin-top: 8px; }
+.hint { text-align: center; font-size: 12px; color: #aaa; padding: 20px 0; }
+.detail { display: none; }
+.detail.active { display: block; }
+.ptag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 10px; margin-bottom: 7px; }
+.tg { background: #E1F5EE; color: #085041; }
+.tb { background: #E6F1FB; color: #0C447C; }
+.tc { background: #FAECE7; color: #712B13; }
+.tr { background: #FCEBEB; color: #791F1F; }
+.tgr { background: #F1EFE8; color: #444441; }
+.tam { background: #EAF3DE; color: #27500A; }
+.ptitle { font-size: 15px; font-weight: 500; color: #111; margin: 0 0 3px; }
+.psub { font-size: 12px; color: #555; margin: 0 0 10px; line-height: 1.5; }
+.cal { border-left: 3px solid; border-radius: 0 6px 6px 0; padding: 8px 12px; margin: 8px 0; font-size: 12px; color: #444; line-height: 1.5; }
+.cal strong { color: #111; font-weight: 500; }
+.ct { border-color: #1D9E75; background: #EAF3DE44; }
+.cb { border-color: #185FA5; background: #E6F1FB44; }
+.cc { border-color: #993C1D; background: #FAECE744; }
+.cr { border-color: #A32D2D; background: #FCEBEB44; }
+.cam { border-color: #3B6D11; background: #EAF3DE44; }
+.tab-row { display: flex; gap: 6px; margin-bottom: 10px; }
+.tbtn { flex: 1; padding: 5px 8px; border-radius: 6px; border: 1.5px solid #ddd; background: #f5f5f5; cursor: pointer; font-size: 12px; color: #666; text-align: center; transition: all .15s; }
+.tbtn.active { border-color: #333; background: #fff; color: #111; font-weight: 500; }
+.tpanel { display: none; }
+.tpanel.active { display: block; }
+.slist { margin: 6px 0; padding: 0; list-style: none; }
+.slist li { font-size: 12px; color: #444; padding: 3px 0 3px 14px; position: relative; border-bottom: 0.5px solid #eee; }
+.slist li:last-child { border-bottom: none; }
+.slist li:before { content: "→"; position: absolute; left: 0; color: #aaa; }
+.mgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 8px 0; }
+.mpill { font-size: 11px; padding: 3px 7px; border-radius: 5px; text-align: center; background: #f5f5f5; border: 1px solid #ddd; color: #555; }
+.mpill.d { background: #FCEBEB44; border-color: #E24B4A; color: #A32D2D; }
+.mpill.s { background: #EAF3DE44; border-color: #639922; color: #27500A; }
+.am-btn { display: inline-block; margin: 10px 0 4px; padding: 8px 18px; border-radius: 20px; background: #EAF3DE; border: 1.5px solid #3B6D11; color: #27500A; font-size: 13px; font-weight: 500; cursor: pointer; }
+.am-btn:hover { background: #C0DD97; }
+.back-btn { display: inline-block; margin: 0 0 10px; padding: 5px 14px; border-radius: 20px; background: #f5f5f5; border: 1px solid #ddd; color: #666; font-size: 12px; cursor: pointer; }
+.two-col { display: flex; gap: 14px; align-items: flex-start; }
+.two-col > div { flex: 1; }
+.seg { cursor: pointer; }
+.seg:hover { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<!-- NEPHRON SVG -->
+<svg width="100%" viewBox="0 0 680 440" style="display:block;">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="680" height="185" fill="#f8f8f8"/>
+  <rect x="0" y="185" width="680" height="255" fill="#f3f3f3"/>
+  <line x1="0" y1="185" x2="680" y2="185" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4 4"/>
+  <text x="14" y="18" font-size="11" fill="#bbb" font-family="sans-serif">Cortex</text>
+  <text x="14" y="200" font-size="11" fill="#bbb" font-family="sans-serif">Medulla</text>
+
+  <g class="seg" id="zg" onclick="sel('g')">
+    <circle id="gc" cx="90" cy="76" r="32" fill="#E6F1FB" stroke="#378ADD" stroke-width="1.5"/>
+    <circle cx="90" cy="76" r="20" fill="#B5D4F4" stroke="#185FA5" stroke-width="1" opacity="0.7"/>
+    <text x="90" y="72" text-anchor="middle" font-size="12" font-weight="500" fill="#042C53" font-family="sans-serif">Glomer-</text>
+    <text x="90" y="85" text-anchor="middle" font-size="12" font-weight="500" fill="#042C53" font-family="sans-serif">ulus</text>
+  </g>
+  <line x1="28" y1="48" x2="60" y2="60" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/>
+  <text x="12" y="44" font-size="10" fill="#aaa" font-family="sans-serif">Blood in</text>
+  <path d="M90 108 Q90 124 76 124" fill="none" stroke="#9FE1CB" stroke-width="8" stroke-linecap="round"/>
+
+  <g class="seg" id="zpt" onclick="sel('pt')">
+    <path id="ptp" d="M76 124 L36 124 Q20 124 20 140 Q20 156 36 156 L166 156 Q182 156 182 172 Q182 188 166 188 L36 188 Q20 188 20 172"
+      fill="none" stroke="#9FE1CB" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M76 124 L36 124 Q20 124 20 140 Q20 156 36 156 L166 156 Q182 156 182 172 Q182 188 166 188 L36 188 Q20 188 20 172"
+      fill="none" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  </g>
+  <text x="200" y="142" font-size="11" fill="#085041" font-family="sans-serif" font-weight="500">Proximal tubule</text>
+  <text x="200" y="155" font-size="10" fill="#085041" font-family="sans-serif">~60–70% Li⁺ · NHE3</text>
+
+  <path d="M20 172 Q20 190 36 190 Q52 190 52 208 L52 370 Q52 390 72 390 Q92 390 92 370 L92 208"
+    fill="none" stroke="#ccc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="30" y="300" font-size="9" fill="#bbb" font-family="sans-serif" transform="rotate(-90,30,300)">Descending loop</text>
+
+  <g class="seg" id="zasc" onclick="sel('asc')">
+    <path id="ascp" d="M92 370 L92 208 Q92 190 110 190 L205 190 Q222 190 222 174 Q222 158 205 158"
+      fill="none" stroke="#B5D4F4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M92 370 L92 208 Q92 190 110 190 L205 190 Q222 190 222 174 Q222 158 205 158"
+      fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  </g>
+  <text x="118" y="300" font-size="9" fill="#0C447C" font-family="sans-serif" transform="rotate(-90,118,300)">Thick ascending limb  ~3–10% Li⁺</text>
+
+  <path d="M205 158 Q225 138 248 138 Q278 138 290 160 Q300 178 300 196"
+    fill="none" stroke="#ccc" stroke-width="5" stroke-linecap="round" stroke-dasharray="5 3"/>
+  <text x="255" y="130" font-size="10" fill="#bbb" font-family="sans-serif">Distal tubule</text>
+
+  <g class="seg" id="zcd" onclick="sel('cd')">
+    <path id="cdp" d="M300 196 L300 408" fill="none" stroke="#F5C4B3" stroke-width="16" stroke-linecap="round"/>
+    <path d="M300 196 L300 408" fill="none" stroke="#993C1D" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  </g>
+  <text x="326" y="255" font-size="11" fill="#712B13" font-family="sans-serif" font-weight="500">Collecting duct</text>
+  <text x="326" y="268" font-size="10" fill="#712B13" font-family="sans-serif">Principal cells</text>
+  <text x="326" y="281" font-size="10" fill="#993C1D" font-family="sans-serif">ENaC · NHE1 · AQP2</text>
+
+  <line x1="300" y1="412" x2="300" y2="430" stroke="#bbb" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="300" y="440" text-anchor="middle" font-size="10" fill="#bbb" font-family="sans-serif">Urine</text>
+
+  <rect x="430" y="30" width="230" height="100" rx="8" fill="none" stroke="#eee" stroke-width="0.5"/>
+  <text x="545" y="50" text-anchor="middle" font-size="12" font-weight="500" fill="#333" font-family="sans-serif">Li⁺ reabsorption by segment</text>
+  <rect x="442" y="60" width="130" height="13" rx="3" fill="#9FE1CB" opacity="0.7"/>
+  <text x="578" y="72" font-size="11" fill="#085041" font-family="sans-serif">Proximal tubule ~60–70%</text>
+  <rect x="442" y="80" width="20" height="13" rx="3" fill="#B5D4F4" opacity="0.7"/>
+  <text x="468" y="92" font-size="11" fill="#0C447C" font-family="sans-serif">~3–10%  Thick ascending</text>
+  <rect x="442" y="100" width="9" height="13" rx="3" fill="#F5C4B3" opacity="0.9"/>
+  <text x="456" y="112" font-size="11" fill="#712B13" font-family="sans-serif">~5%  Collecting duct</text>
+  <text x="545" y="150" text-anchor="middle" font-size="11" fill="#bbb" font-family="sans-serif">Click any segment to explore</text>
+</svg>
+
+<div class="detail-wrap">
+<div class="hint" id="hint">Click a segment above to see how lithium is handled there</div>
+
+<!-- GLOMERULUS -->
+<div class="detail" id="d-g">
+  <span class="ptag tgr">Glomerulus</span>
+  <div class="ptitle">Li⁺ is freely filtered</div>
+  <div class="psub">No protein binding — nearly 100% of serum lithium enters the tubular filtrate here.</div>
+  <div class="cal cb"><strong>GFR matters.</strong> Dehydration, NSAIDs, ACEi, ARB, and aging all reduce GFR → less filtrate volume → less sodium delivered → proportionally more lithium reabsorbed throughout the tubule.</div>
+</div>
+
+<!-- PROXIMAL TUBULE -->
+<div class="detail" id="d-pt">
+  <span class="ptag tg">Proximal tubule — Issue 1</span>
+  <div class="ptitle">Serum lithium is a sodium story</div>
+  <div class="psub">NHE3 (apical) brings Na⁺ and Li⁺ from lumen into the cell. Na⁺/K⁺-ATPase (basolateral) pumps Na⁺ out — Li⁺ exits reasonably well here. High volume, proportional segment.</div>
+  <div class="two-col">
+    <div>
+      <svg width="100%" viewBox="0 0 300 155" style="display:block;">
+        <defs><marker id="apt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <text x="72" y="11" text-anchor="middle" font-size="10" fill="#085041" font-family="sans-serif">Normal Na⁺</text>
+        <rect x="8" y="15" width="128" height="32" rx="3" fill="#FFFACD" stroke="#D4B800" stroke-width="0.5"/>
+        <circle cx="28" cy="30" r="7" fill="#378ADD" opacity="0.8"/><text x="28" y="34" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="50" cy="22" r="7" fill="#378ADD" opacity="0.8"/><text x="50" y="26" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="72" cy="32" r="7" fill="#378ADD" opacity="0.8"/><text x="72" y="36" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="94" cy="22" r="7" fill="#378ADD" opacity="0.8"/><text x="94" y="26" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="116" cy="32" r="7" fill="#378ADD" opacity="0.8"/><text x="116" y="36" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="38" cy="42" r="6" fill="#EF9F27" opacity="0.9"/><text x="38" y="46" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="100" cy="42" r="6" fill="#EF9F27" opacity="0.9"/><text x="100" y="46" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <rect x="8" y="47" width="128" height="7" rx="2" fill="#ccc" opacity="0.7"/>
+        <rect x="58" y="44" width="28" height="13" rx="3" fill="#1D9E75" opacity="0.85"/>
+        <text x="72" y="54" text-anchor="middle" font-size="7" fill="#04342C" font-family="sans-serif">NHE3</text>
+        <line x1="66" y1="47" x2="66" y2="61" stroke="#378ADD" stroke-width="1.2" marker-end="url(#apt)"/>
+        <line x1="78" y1="47" x2="78" y2="61" stroke="#EF9F27" stroke-width="1.2" marker-end="url(#apt)"/>
+        <rect x="8" y="54" width="128" height="44" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="72" y="65" text-anchor="middle" font-size="8" fill="#aaa" font-family="sans-serif">Cell</text>
+        <circle cx="46" cy="80" r="7" fill="#378ADD" opacity="0.5"/><text x="46" y="84" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="70" cy="72" r="6" fill="#EF9F27" opacity="0.6"/><text x="70" y="76" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="96" cy="82" r="7" fill="#378ADD" opacity="0.5"/><text x="96" y="86" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <rect x="8" y="98" width="128" height="6" rx="2" fill="#ccc" opacity="0.7"/>
+        <rect x="82" y="95" width="46" height="12" rx="3" fill="#534AB7" opacity="0.8"/>
+        <text x="105" y="104" text-anchor="middle" font-size="6" fill="#EEEDFE" font-family="sans-serif">Na⁺/K⁺-ATPase</text>
+        <line x1="98" y1="104" x2="98" y2="116" stroke="#378ADD" stroke-width="1.2" marker-end="url(#apt)"/>
+        <line x1="70" y1="104" x2="70" y2="116" stroke="#EF9F27" stroke-width="1" marker-end="url(#apt)"/>
+        <rect x="8" y="104" width="128" height="22" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="72" y="118" text-anchor="middle" font-size="8" fill="#aaa" font-family="sans-serif">Interstitium</text>
+        <text x="72" y="142" text-anchor="middle" font-size="11" font-weight="500" fill="#1D9E75" font-family="sans-serif">~60–70% Li⁺ reabsorbed</text>
+
+        <text x="228" y="11" text-anchor="middle" font-size="10" fill="#A32D2D" font-family="sans-serif">Low Na⁺</text>
+        <rect x="164" y="15" width="128" height="32" rx="3" fill="#FFFACD" stroke="#D4B800" stroke-width="0.5"/>
+        <circle cx="184" cy="28" r="7" fill="#378ADD" opacity="0.35"/><text x="184" y="32" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="270" cy="30" r="7" fill="#378ADD" opacity="0.35"/><text x="270" y="34" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="214" cy="24" r="6" fill="#EF9F27" opacity="0.95"/><text x="214" y="28" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="244" cy="40" r="6" fill="#EF9F27" opacity="0.95"/><text x="244" y="44" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <rect x="164" y="47" width="128" height="7" rx="2" fill="#ccc" opacity="0.7"/>
+        <rect x="214" y="44" width="28" height="13" rx="3" fill="#1D9E75" opacity="0.85"/>
+        <text x="228" y="54" text-anchor="middle" font-size="7" fill="#04342C" font-family="sans-serif">NHE3</text>
+        <line x1="222" y1="47" x2="222" y2="61" stroke="#EF9F27" stroke-width="2.2" marker-end="url(#apt)"/>
+        <line x1="234" y1="47" x2="234" y2="61" stroke="#EF9F27" stroke-width="2.2" marker-end="url(#apt)"/>
+        <line x1="210" y1="47" x2="210" y2="61" stroke="#378ADD" stroke-width="0.7" marker-end="url(#apt)" opacity="0.3"/>
+        <rect x="164" y="54" width="128" height="44" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="228" y="65" text-anchor="middle" font-size="8" fill="#aaa" font-family="sans-serif">Cell</text>
+        <circle cx="196" cy="78" r="6" fill="#EF9F27" opacity="0.85"/><text x="196" y="82" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="224" cy="72" r="6" fill="#EF9F27" opacity="0.85"/><text x="224" y="76" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="252" cy="80" r="7" fill="#378ADD" opacity="0.25"/><text x="252" y="84" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <rect x="164" y="98" width="128" height="6" rx="2" fill="#ccc" opacity="0.7"/>
+        <rect x="238" y="95" width="46" height="12" rx="3" fill="#534AB7" opacity="0.8"/>
+        <text x="261" y="104" text-anchor="middle" font-size="6" fill="#EEEDFE" font-family="sans-serif">Na⁺/K⁺-ATPase</text>
+        <line x1="215" y1="104" x2="215" y2="116" stroke="#EF9F27" stroke-width="1.5" marker-end="url(#apt)"/>
+        <line x1="254" y1="104" x2="254" y2="116" stroke="#378ADD" stroke-width="0.7" marker-end="url(#apt)" opacity="0.3"/>
+        <rect x="164" y="104" width="128" height="22" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="228" y="118" text-anchor="middle" font-size="8" fill="#aaa" font-family="sans-serif">Interstitium</text>
+        <text x="228" y="142" text-anchor="middle" font-size="11" font-weight="500" fill="#A32D2D" font-family="sans-serif">~80–90% Li⁺ reabsorbed</text>
+      </svg>
+    </div>
+    <div>
+      <div class="cal ct">Sodium and lithium are reabsorbed here according to their proportion in the lumen. Less sodium means lithium makes up a larger fraction — so more lithium is absorbed.</div>
+      <div class="mgrid">
+        <div class="mpill d">ACE inhibitors</div><div class="mpill d">ARBs</div><div class="mpill d">COX-2 inhibitors</div>
+        <div class="mpill d">NSAIDs</div><div class="mpill d">Dehydration</div><div class="mpill d">Low-salt diet</div>
+        <div class="mpill d">Vomiting/diarrhea</div><div class="mpill d">Fever/sweating</div><div class="mpill s">Aspirin — safe</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASCENDING LIMB -->
+<div class="detail" id="d-asc">
+  <span class="ptag tb">Thick ascending limb</span>
+  <div class="ptitle">Same principle, smaller contribution</div>
+  <div class="psub">NHE3 and NKCC2 handle Na⁺ reabsorption here. Li⁺ reabsorbed alongside Na⁺ by the same proportional mechanism — ~3–10% of filtered load. No special asymmetry, no intracellular trapping.</div>
+  <div class="cal cb"><strong>Clinical significance here is serum level only</strong> — not structural injury. Less Na⁺ delivered means Li⁺ is a larger fraction. Same story as the proximal tubule, smaller volume.</div>
+</div>
+
+<!-- COLLECTING DUCT -->
+<div class="detail" id="d-cd">
+  <span class="ptag tc">Collecting duct — principal cells</span>
+  <div class="ptitle">Where lithium can cause structural damage</div>
+  <div class="psub">ENaC (apical) admits Li⁺ readily. NHE1 (basolateral) provides some exit but cannot keep pace. Na⁺/K⁺-ATPase does not move Li⁺. Net result: intracellular accumulation.</div>
+  <div class="tab-row">
+    <div class="tbtn active" onclick="stab('2a')">2a — Nephrogenic DI</div>
+    <div class="tbtn" onclick="stab('2b')">2b — Direct toxicity</div>
+  </div>
+
+  <!-- TAB 2a -->
+  <div class="tpanel active" id="tp-2a">
+    <div id="2a-main">
+      <!-- Collecting duct cell cross section — unprotected -->
+      <svg width="100%" viewBox="0 0 620 210" style="display:block;margin-bottom:10px;">
+        <defs><marker id="acd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <!-- Lumen yellow -->
+        <rect x="10" y="8" width="600" height="42" rx="4" fill="#FFFACD" stroke="#D4B800" stroke-width="0.5"/>
+        <text x="18" y="22" font-size="9" fill="#8B7A00" font-family="sans-serif">Lumen (filtrate)</text>
+        <circle cx="100" cy="30" r="7" fill="#EF9F27" opacity="0.9"/><text x="100" y="34" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="200" cy="24" r="7" fill="#EF9F27" opacity="0.9"/><text x="200" y="28" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="320" cy="32" r="7" fill="#EF9F27" opacity="0.9"/><text x="320" y="36" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="160" cy="38" r="6" fill="#378ADD" opacity="0.5"/><text x="160" y="42" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="270" cy="26" r="6" fill="#378ADD" opacity="0.5"/><text x="270" y="30" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <!-- Apical membrane -->
+        <rect x="10" y="50" width="600" height="8" rx="2" fill="#ccc" opacity="0.7"/>
+        <text x="615" y="57" text-anchor="end" font-size="9" fill="#999" font-family="sans-serif">Apical membrane</text>
+        <!-- 3 ENaC channels open -->
+        <rect x="76" y="46" width="40" height="16" rx="3" fill="#1D9E75" opacity="0.9"/>
+        <text x="96" y="57" text-anchor="middle" font-size="8" fill="#04342C" font-family="sans-serif">ENaC</text>
+        <rect x="196" y="46" width="40" height="16" rx="3" fill="#1D9E75" opacity="0.9"/>
+        <text x="216" y="57" text-anchor="middle" font-size="8" fill="#04342C" font-family="sans-serif">ENaC</text>
+        <rect x="316" y="46" width="40" height="16" rx="3" fill="#1D9E75" opacity="0.9"/>
+        <text x="336" y="57" text-anchor="middle" font-size="8" fill="#04342C" font-family="sans-serif">ENaC</text>
+        <!-- Li entry arrows -->
+        <line x1="96" y1="50" x2="96" y2="68" stroke="#EF9F27" stroke-width="2.2" marker-end="url(#acd)"/>
+        <line x1="216" y1="50" x2="216" y2="68" stroke="#EF9F27" stroke-width="2.2" marker-end="url(#acd)"/>
+        <line x1="336" y1="50" x2="336" y2="68" stroke="#EF9F27" stroke-width="2.2" marker-end="url(#acd)"/>
+        <!-- Cell body -->
+        <rect x="10" y="58" width="600" height="90" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="20" y="72" font-size="9" fill="#aaa" font-family="sans-serif">Principal cell</text>
+        <!-- Intracellular Li accumulation -->
+        <circle cx="80" cy="98" r="7" fill="#EF9F27" opacity="0.85"/><text x="80" y="102" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="110" cy="118" r="7" fill="#EF9F27" opacity="0.85"/><text x="110" y="122" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="150" cy="94" r="7" fill="#EF9F27" opacity="0.85"/><text x="150" y="98" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="190" cy="116" r="7" fill="#EF9F27" opacity="0.85"/><text x="190" y="120" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="230" cy="96" r="7" fill="#EF9F27" opacity="0.85"/><text x="230" y="100" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="130" cy="136" r="7" fill="#EF9F27" opacity="0.7"/><text x="130" y="140" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="200" cy="138" r="7" fill="#EF9F27" opacity="0.7"/><text x="200" y="142" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <!-- AQP2 stuck -->
+        <rect x="380" y="68" width="76" height="20" rx="4" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="418" y="82" text-anchor="middle" font-size="9" fill="#042C53" font-family="sans-serif">AQP2 vesicle</text>
+        <rect x="380" y="96" width="76" height="20" rx="4" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="418" y="110" text-anchor="middle" font-size="9" fill="#042C53" font-family="sans-serif">AQP2 vesicle</text>
+        <rect x="380" y="124" width="76" height="20" rx="4" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="418" y="138" text-anchor="middle" font-size="9" fill="#042C53" font-family="sans-serif">AQP2 vesicle</text>
+        <line x1="418" y1="58" x2="418" y2="66" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="2 2"/>
+        <text x="462" y="64" font-size="9" fill="#A32D2D" font-family="sans-serif">insertion blocked by Li⁺</text>
+        <line x1="462" y1="54" x2="474" y2="66" stroke="#A32D2D" stroke-width="1.5"/>
+        <line x1="474" y1="54" x2="462" y2="66" stroke="#A32D2D" stroke-width="1.5"/>
+        <!-- Basolateral membrane -->
+        <rect x="10" y="148" width="600" height="7" rx="2" fill="#ccc" opacity="0.7"/>
+        <text x="615" y="155" text-anchor="end" font-size="9" fill="#999" font-family="sans-serif">Basolateral membrane</text>
+        <!-- NHE1 some exit -->
+        <rect x="50" y="144" width="38" height="15" rx="3" fill="#7F77DD" opacity="0.85"/>
+        <text x="69" y="155" text-anchor="middle" font-size="8" fill="#26215C" font-family="sans-serif">NHE1</text>
+        <line x1="69" y1="159" x2="69" y2="173" stroke="#EF9F27" stroke-width="1.2" stroke-dasharray="2 2" marker-end="url(#acd)"/>
+        <text x="120" y="172" font-size="9" fill="#7F77DD" font-family="sans-serif">some Li⁺ exits — overwhelmed</text>
+        <!-- NaKATPase no Li -->
+        <rect x="440" y="144" width="80" height="15" rx="3" fill="#534AB7" opacity="0.8"/>
+        <text x="480" y="155" text-anchor="middle" font-size="8" fill="#EEEDFE" font-family="sans-serif">Na⁺/K⁺-ATPase</text>
+        <text x="480" y="172" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">does not move Li⁺</text>
+        <!-- Interstitium -->
+        <rect x="10" y="155" width="600" height="28" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="310" y="173" text-anchor="middle" font-size="9" fill="#aaa" font-family="sans-serif">Interstitium</text>
+      </svg>
+
+      <div class="cal cc"><strong>Result:</strong> AQP2 cannot insert → collecting duct impermeable to water despite normal ADH → nephrogenic DI.</div>
+      <ul class="slist">
+        <li>Polydipsia</li>
+        <li>Polyuria</li>
+        <li>Decreased early morning urine osmolality — &lt;300 consistent with NDI · 300–700 possible partial NDI</li>
+        <li>24-hour fluid intake &gt;2.5L — flag for NDI</li>
+      </ul>
+      <div class="cal cc"><strong>Polyuria is not a nuisance side effect.</strong> It is evidence of intracellular accumulation. Can occur at any dose including therapeutic serum levels.</div>
+      <div class="am-btn" onclick="showAm()">Add amiloride → see what changes</div>
+    </div>
+
+    <!-- AMILORIDE PANEL -->
+    <div id="am-panel" style="display:none">
+      <div class="back-btn" onclick="hideAm()">← Back to 2a</div>
+      <span class="ptag tam">Amiloride protection</span>
+      <div class="ptitle">ENaC blocked — the collecting duct protected</div>
+      <div class="psub">Amiloride 5–10mg daily blocks ENaC channels, reducing Li⁺ entry. One channel remains partially open — entry is dramatically reduced, not eliminated.</div>
+
+      <svg width="100%" viewBox="0 0 620 210" style="display:block;margin-bottom:10px;">
+        <defs><marker id="aam" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <!-- Lumen yellow -->
+        <rect x="10" y="8" width="600" height="42" rx="4" fill="#FFFACD" stroke="#D4B800" stroke-width="0.5"/>
+        <text x="18" y="22" font-size="9" fill="#8B7A00" font-family="sans-serif">Lumen (filtrate)</text>
+        <circle cx="100" cy="30" r="7" fill="#EF9F27" opacity="0.9"/><text x="100" y="34" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="200" cy="24" r="7" fill="#EF9F27" opacity="0.9"/><text x="200" y="28" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="320" cy="32" r="7" fill="#EF9F27" opacity="0.9"/><text x="320" y="36" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="160" cy="38" r="6" fill="#378ADD" opacity="0.5"/><text x="160" y="42" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <circle cx="270" cy="26" r="6" fill="#378ADD" opacity="0.5"/><text x="270" y="30" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">Na⁺</text>
+        <!-- Apical membrane -->
+        <rect x="10" y="50" width="600" height="8" rx="2" fill="#ccc" opacity="0.7"/>
+        <text x="615" y="57" text-anchor="end" font-size="9" fill="#999" font-family="sans-serif">Apical membrane</text>
+        <!-- ENaC 1 BLOCKED -->
+        <rect x="76" y="46" width="40" height="16" rx="3" fill="#1D9E75" opacity="0.4"/>
+        <text x="96" y="57" text-anchor="middle" font-size="8" fill="#085041" font-family="sans-serif">ENaC</text>
+        <rect x="72" y="42" width="48" height="24" rx="4" fill="#639922" opacity="0.85"/>
+        <text x="96" y="57" text-anchor="middle" font-size="8" fill="#173404" font-family="sans-serif">BLOCKED</text>
+        <text x="96" y="40" text-anchor="middle" font-size="9" fill="#3B6D11" font-family="sans-serif">Amiloride</text>
+        <!-- ENaC 2 BLOCKED -->
+        <rect x="196" y="46" width="40" height="16" rx="3" fill="#1D9E75" opacity="0.4"/>
+        <rect x="192" y="42" width="48" height="24" rx="4" fill="#639922" opacity="0.85"/>
+        <text x="216" y="57" text-anchor="middle" font-size="8" fill="#173404" font-family="sans-serif">BLOCKED</text>
+        <text x="216" y="40" text-anchor="middle" font-size="9" fill="#3B6D11" font-family="sans-serif">Amiloride</text>
+        <!-- ENaC 3 open — minimal entry -->
+        <rect x="316" y="46" width="40" height="16" rx="3" fill="#1D9E75" opacity="0.9"/>
+        <text x="336" y="57" text-anchor="middle" font-size="8" fill="#04342C" font-family="sans-serif">ENaC</text>
+        <line x1="336" y1="50" x2="336" y2="68" stroke="#EF9F27" stroke-width="1" marker-end="url(#aam)" opacity="0.6"/>
+        <text x="390" y="54" font-size="9" fill="#BA7517" font-family="sans-serif">minimal entry</text>
+        <!-- Cell body -->
+        <rect x="10" y="58" width="600" height="90" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="20" y="72" font-size="9" fill="#aaa" font-family="sans-serif">Principal cell</text>
+        <!-- Very little intracellular Li -->
+        <circle cx="120" cy="108" r="7" fill="#EF9F27" opacity="0.45"/><text x="120" y="112" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <circle cx="180" cy="128" r="7" fill="#EF9F27" opacity="0.35"/><text x="180" y="132" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">Li⁺</text>
+        <!-- AQP2 NOW INSERTING -->
+        <rect x="380" y="46" width="76" height="18" rx="4" fill="#378ADD" stroke="#185FA5" stroke-width="1"/>
+        <text x="418" y="59" text-anchor="middle" font-size="9" fill="#E6F1FB" font-family="sans-serif">AQP2 inserted</text>
+        <line x1="418" y1="64" x2="418" y2="72" stroke="#185FA5" stroke-width="1.5" marker-end="url(#aam)"/>
+        <rect x="450" y="82" width="70" height="18" rx="4" fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5" opacity="0.7"/>
+        <text x="485" y="95" text-anchor="middle" font-size="8" fill="#042C53" font-family="sans-serif">AQP2 vesicle</text>
+        <line x1="485" y1="100" x2="485" y2="110" stroke="#185FA5" stroke-width="1" marker-end="url(#aam)" opacity="0.6"/>
+        <text x="530" y="90" font-size="9" fill="#185FA5" font-family="sans-serif">inserting</text>
+        <!-- Basolateral membrane -->
+        <rect x="10" y="148" width="600" height="7" rx="2" fill="#ccc" opacity="0.7"/>
+        <text x="615" y="155" text-anchor="end" font-size="9" fill="#999" font-family="sans-serif">Basolateral membrane</text>
+        <!-- NHE1 keeping pace -->
+        <rect x="50" y="144" width="38" height="15" rx="3" fill="#7F77DD" opacity="0.85"/>
+        <text x="69" y="155" text-anchor="middle" font-size="8" fill="#26215C" font-family="sans-serif">NHE1</text>
+        <line x1="69" y1="159" x2="69" y2="173" stroke="#EF9F27" stroke-width="1.5" marker-end="url(#aam)"/>
+        <text x="120" y="172" font-size="9" fill="#7F77DD" font-family="sans-serif">Li⁺ exits — keeping pace</text>
+        <!-- NaKATPase -->
+        <rect x="440" y="144" width="80" height="15" rx="3" fill="#534AB7" opacity="0.8"/>
+        <text x="480" y="155" text-anchor="middle" font-size="8" fill="#EEEDFE" font-family="sans-serif">Na⁺/K⁺-ATPase</text>
+        <text x="480" y="172" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">does not move Li⁺</text>
+        <!-- Interstitium -->
+        <rect x="10" y="155" width="600" height="28" fill="none" stroke="#eee" stroke-width="0.5"/>
+        <text x="310" y="173" text-anchor="middle" font-size="9" fill="#aaa" font-family="sans-serif">Interstitium</text>
+      </svg>
+
+      <div class="cal cam"><strong>Amiloride fixes:</strong> NDI resolves as AQP2 can now insert. Principal cell fibrosis risk drops. Polyuria-driven dehydration reduced — one serum level toxicity trigger indirectly addressed.</div>
+      <div class="cal cam"><strong>Dosing:</strong> 5mg twice daily. Monitor K⁺ and creatinine.</div>
+      <div style="margin-top:10px;padding:10px 12px;border-radius:8px;border:1.5px solid #A32D2D;background:#FCEBEB22;">
+        <div style="font-size:12px;font-weight:500;margin-bottom:6px;">Amiloride does NOT protect against rising lithium levels from:</div>
+        <div class="mgrid">
+          <div class="mpill d">Vomiting</div><div class="mpill d">Diarrhea</div><div class="mpill d">Fever/sweating</div>
+          <div class="mpill d">ACE inhibitors</div><div class="mpill d">ARBs</div><div class="mpill d">COX-2 inhibitors</div>
+          <div class="mpill d">NSAIDs</div><div class="mpill d">Low-salt diet</div><div class="mpill d">Dehydration</div>
+        </div>
+        <div style="font-size:11px;color:#666;margin-top:6px;">These raise serum levels via proximal tubule sodium depletion — amiloride has no footprint there.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2b -->
+  <div class="tpanel" id="tp-2b">
+    <span class="ptag tr">Issue 2b — direct toxicity</span>
+    <div class="ptitle" style="font-size:13px;">Intracellular accumulation at any dose — including therapeutic serum levels</div>
+
+    <!-- Three stage progression diagram -->
+    <svg width="100%" viewBox="0 0 620 140" style="display:block;margin:10px 0;">
+      <defs><marker id="a2b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+      <!-- Stage 1 normal -->
+      <text x="90" y="14" text-anchor="middle" font-size="10" fill="#555" font-family="sans-serif">Normal</text>
+      <rect x="20" y="20" width="140" height="80" rx="8" fill="none" stroke="#1D9E75" stroke-width="1.5"/>
+      <rect x="32" y="20" width="22" height="12" rx="3" fill="#378ADD" opacity="0.8"/>
+      <text x="43" y="30" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">AQP2</text>
+      <rect x="64" y="20" width="22" height="12" rx="3" fill="#378ADD" opacity="0.8"/>
+      <text x="75" y="30" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">AQP2</text>
+      <rect x="96" y="20" width="22" height="12" rx="3" fill="#378ADD" opacity="0.8"/>
+      <text x="107" y="30" text-anchor="middle" font-size="7" fill="#042C53" font-family="sans-serif">AQP2</text>
+      <ellipse cx="90" cy="82" rx="22" ry="14" fill="#C0DD97" stroke="#639922" stroke-width="0.5"/>
+      <text x="90" y="86" text-anchor="middle" font-size="8" fill="#27500A" font-family="sans-serif">nucleus</text>
+      <text x="90" y="116" text-anchor="middle" font-size="10" fill="#1D9E75" font-family="sans-serif">Functional</text>
+
+      <line x1="164" y1="60" x2="200" y2="60" stroke="#999" stroke-width="1.2" marker-end="url(#a2b)"/>
+      <text x="182" y="54" text-anchor="middle" font-size="9" fill="#aaa" font-family="sans-serif">months–years</text>
+
+      <!-- Stage 2 accumulation -->
+      <text x="330" y="14" text-anchor="middle" font-size="10" fill="#555" font-family="sans-serif">Li⁺ accumulation</text>
+      <rect x="204" y="20" width="252" height="80" rx="8" fill="none" stroke="#BA7517" stroke-width="1.5"/>
+      <circle cx="230" cy="50" r="7" fill="#EF9F27" opacity="0.85"/><text x="230" y="54" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+      <circle cx="258" cy="68" r="7" fill="#EF9F27" opacity="0.85"/><text x="258" y="72" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+      <circle cx="290" cy="46" r="7" fill="#EF9F27" opacity="0.85"/><text x="290" y="50" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+      <circle cx="322" cy="64" r="7" fill="#EF9F27" opacity="0.85"/><text x="322" y="68" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+      <circle cx="352" cy="50" r="7" fill="#EF9F27" opacity="0.75"/><text x="352" y="54" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+      <circle cx="388" cy="58" r="7" fill="#EF9F27" opacity="0.7"/><text x="388" y="62" text-anchor="middle" font-size="7" fill="#412402" font-family="sans-serif">Li⁺</text>
+      <ellipse cx="330" cy="84" rx="22" ry="12" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+      <text x="330" y="88" text-anchor="middle" font-size="8" fill="#412402" font-family="sans-serif">stressed</text>
+      <text x="330" y="116" text-anchor="middle" font-size="10" fill="#BA7517" font-family="sans-serif">NDI + toxicity risk</text>
+
+      <line x1="460" y1="60" x2="496" y2="60" stroke="#999" stroke-width="1.2" marker-end="url(#a2b)"/>
+      <text x="478" y="54" text-anchor="middle" font-size="9" fill="#aaa" font-family="sans-serif">years</text>
+
+      <!-- Stage 3 fibrosis -->
+      <text x="560" y="14" text-anchor="middle" font-size="10" fill="#A32D2D" font-family="sans-serif">Fibrosis</text>
+      <rect x="500" y="20" width="110" height="80" rx="8" fill="none" stroke="#A32D2D" stroke-width="1.5"/>
+      <line x1="512" y1="34" x2="598" y2="34" stroke="#F09595" stroke-width="1" opacity="0.6"/>
+      <line x1="512" y1="48" x2="598" y2="48" stroke="#F09595" stroke-width="1" opacity="0.6"/>
+      <line x1="512" y1="62" x2="598" y2="62" stroke="#F09595" stroke-width="1" opacity="0.6"/>
+      <line x1="512" y1="76" x2="598" y2="76" stroke="#F09595" stroke-width="1" opacity="0.6"/>
+      <line x1="512" y1="90" x2="598" y2="90" stroke="#F09595" stroke-width="1" opacity="0.6"/>
+      <ellipse cx="555" cy="60" rx="22" ry="14" fill="#F7C1C1" stroke="#A32D2D" stroke-width="0.5"/>
+      <text x="555" y="64" text-anchor="middle" font-size="8" fill="#791F1F" font-family="sans-serif">apoptosis</text>
+      <text x="555" y="116" text-anchor="middle" font-size="10" fill="#A32D2D" font-family="sans-serif">Irreversible CKD</text>
+    </svg>
+
+    <div class="cal cr"><strong>Chronic intracellular Li⁺ accumulation → direct toxicity to principal cells → apoptosis → fibrotic replacement → irreversible CKD.</strong> Not a high-dose phenomenon. Duration of exposure matters as much as peak levels.</div>
+    <ul class="slist">
+      <li>Polydipsia — signal of accumulation</li>
+      <li>Polyuria — signal of accumulation</li>
+      <li>Decreased early morning urine osmolality — signal of accumulation</li>
+      <li>Rising creatinine — late finding; structural damage already present</li>
+    </ul>
+    <div class="cal cr"><strong>Amiloride fixes both 2a and 2b</strong> through the same mechanism — less ENaC entry, less intracellular accumulation, NDI resolves, fibrosis risk drops.</div>
+    <div class="cal cr"><strong>Fibrosis does not reverse when lithium is stopped.</strong> The window for prevention is while the functional signals are present.</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function sel(z) {
+  document.getElementById('hint').style.display = 'none';
+  ['g','pt','asc','cd'].forEach(s => document.getElementById('d-'+s).classList.remove('active'));
+  document.getElementById('d-'+z).classList.add('active');
+  var w = {pt:10,asc:10,cd:16}, sw = {pt:14,asc:14,cd:20};
+  ['pt','asc','cd'].forEach(s => {
+    var el = document.getElementById(s+'p');
+    if (el) el.setAttribute('stroke-width', s===z ? sw[s] : w[s]);
+  });
+  document.getElementById('gc').setAttribute('stroke-width', z==='g' ? '4' : '1.5');
+}
+function stab(t) {
+  document.querySelectorAll('.tbtn').forEach((b,i) => b.classList.toggle('active', (i===0&&t==='2a')||(i===1&&t==='2b')));
+  document.querySelectorAll('.tpanel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tp-'+t).classList.add('active');
+  if (t==='2a') hideAm();
+}
+function showAm() {
+  document.getElementById('2a-main').style.display = 'none';
+  document.getElementById('am-panel').style.display = 'block';
+}
+function hideAm() {
+  document.getElementById('am-panel').style.display = 'none';
+  document.getElementById('2a-main').style.display = 'block';
+}
+</script>
+</body></html>

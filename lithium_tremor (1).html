@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Lithium — Tremor</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; max-width: 960px; margin: 0 auto; color: #222; background: #fff; }
+  .two-col { display: flex; gap: 16px; }
+  .two-col > div { flex: 1; }
+  .card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .card-title { font-size: 13px; font-weight: 500; margin: 0 0 8px; }
+  .cal { border-left: 3px solid; border-radius: 0 6px 6px 0; padding: 8px 12px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #444; }
+  .cr { border-color: #A32D2D; background: #FCEBEB44; }
+  .cp { border-color: #534AB7; background: #EEEDFE44; }
+  .slist { margin: 6px 0; padding: 0; list-style: none; }
+  .slist li { font-size: 12px; padding: 4px 0 4px 14px; position: relative; line-height: 1.4; border-bottom: 0.5px solid #eee; color: #444; }
+  .slist li:last-child { border-bottom: none; }
+  .slist li:before { content: "→"; position: absolute; left: 0; color: #999; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  .badge-green { background: #EAF3DE; color: #27500A; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .ladder-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 0.5px solid #eee; }
+  .ladder-row:last-child { border-bottom: none; }
+  .ladder-text { font-size: 12px; color: #444; line-height: 1.4; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 10px 0; }
+  th { text-align: left; padding: 5px 8px; background: #f5f5f5; font-weight: 500; border-bottom: 0.5px solid #ddd; }
+  td { padding: 5px 8px; border-bottom: 0.5px solid #eee; color: #444; }
+  tr:last-child td { border-bottom: none; }
+  .footnote { font-size: 11px; color: #999; border-top: 0.5px solid #eee; padding-top: 8px; margin-top: 4px; }
+</style></head><body>
+<div style="font-family:'Georgia',serif;font-size:22px;font-weight:700;color:#0d1b2a;line-height:1.2;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid rgba(0,0,0,0.1);">Tremor</div>
+<div class="two-col">
+  <div>
+    <div class="card">
+      <div class="card-title">Characterizing the tremor</div>
+      <ul class="slist">
+        <li>Fine postural tremor — nearly indistinguishable from essential tremor</li>
+        <li>Dose-dependent — higher serum levels correlate with more tremor</li>
+        <li><strong>Check for tremor at baseline before starting</strong> — document what is pre-existing</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Things that make it worse</div>
+      <ul class="slist">
+        <li><span class="badge badge-amber">Valproate</span> co-prescription — common in this population</li>
+        <li><span class="badge badge-amber">Lamotrigine</span> — also a common co-prescription, can worsen tremor</li>
+        <li><span class="badge badge-amber">Higher lithium levels</span> — revisit dose if tremor is bothersome</li>
+        <li><span class="badge badge-amber">Caffeine · anxiety · fatigue</span> — worth asking about</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Management</div>
+      <div class="ladder-row"><div><span class="badge badge-green">First</span></div><div class="ladder-text">Reassure — fine tremor is common and not harmful. Lower dose if clinically able.</div></div>
+      <div class="ladder-row"><div><span class="badge badge-blue">If mild</span></div><div class="ladder-text">Propranolol 10mg BID — titrate every 2–7 days as tolerated until improved.</div></div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-title">The important differential</div>
+      <div class="cal cr"><strong>If the patient is on an antipsychotic</strong> — consider drug-induced parkinsonism before attributing tremor to lithium. Character is different: resting tremor, rigidity, bradykinesia. Address the antipsychotic, not the lithium.</div>
+      <div style="margin-top:10px;font-size:12px;font-weight:500;margin-bottom:8px;">Tremor character — quick reference</div>
+      <table>
+        <thead><tr><th>Type</th><th>Character</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>Lithium</td><td>Fine, low amplitude</td><td>Postural / action</td></tr>
+          <tr><td>Essential</td><td>Fine, low amplitude</td><td>Postural / action</td></tr>
+          <tr><td>Drug-induced parkinsonism</td><td>Coarse, pill-rolling</td><td>At rest</td></tr>
+        </tbody>
+      </table>
+      <div class="cal cp"><strong>Lithium tremor and essential tremor are clinically indistinguishable.</strong> Baseline documentation is your only reference point.</div>
+    </div>
+    <div class="footnote">Full management details including propranolol titration in companion document.</div>
+  </div>
+</div>
+</body></html>

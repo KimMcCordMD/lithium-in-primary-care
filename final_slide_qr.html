@@ -2,167 +2,146 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Final Slide — QR Resources</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slides & Resources — Lithium in Primary Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy: #0D1B2A;
-    --navy-mid: #142236;
-    --gold: #C9943A;
-    --gold-light: #E8B96A;
-    --cream: #F5EDD8;
-    --text-muted: rgba(245,237,216,0.55);
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--navy);
-    color: var(--cream);
+    background: #0d1b2a;
+    color: #f5f0e8;
     font-family: 'Source Sans 3', sans-serif;
-    width: 1280px;
-    height: 720px;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    position: relative;
   }
-  body::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    max-width: 900px;
+    padding: 40px;
   }
-  body::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: rgba(201,148,58,0.3);
-  }
-  .slide {
-    width: 100%;
-    height: 100%;
+  .left {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 50px 80px;
-    position: relative;
+    gap: 14px;
   }
-  .overline {
-    font-size: 0.65em;
-    font-weight: 600;
-    letter-spacing: 0.22em;
+  #qrcode {
+    background: #fff;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid #c9a84c;
+  }
+  #qrcode img, #qrcode canvas { display: block; }
+  .qr-label {
+    font-size: 11px;
+    color: rgba(245,240,232,0.5);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.5em;
     text-align: center;
+  }
+  .right { flex: 1; }
+  .pre-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #c9a84c;
+    opacity: 0.8;
+    margin-bottom: 14px;
   }
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 2em;
-    color: var(--cream);
-    text-align: center;
-    margin-bottom: 0.15em;
-    line-height: 1.1;
+    font-size: 2.2em;
+    font-weight: 600;
+    color: #f5f0e8;
+    line-height: 1.2;
+    margin-bottom: 20px;
   }
-  .tagline {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 0.85em;
-    color: var(--text-muted);
-    text-align: center;
-    margin-bottom: 2em;
-  }
-  .qr-row {
+  h1 em { color: #c9a84c; font-style: normal; }
+  .rule { width: 50px; height: 2px; background: #c9a84c; margin-bottom: 20px; opacity: 0.6; }
+  .resource-list { list-style: none; padding: 0; margin: 0 0 28px; }
+  .resource-list li {
     display: flex;
-    gap: 60px;
     align-items: flex-start;
-    justify-content: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 0.5px solid rgba(201,168,76,0.15);
+    font-size: 0.9em;
+    color: rgba(245,240,232,0.8);
+    line-height: 1.5;
   }
-  .qr-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+  .resource-list li:last-child { border-bottom: none; }
+  .resource-list li::before {
+    content: '▸';
+    color: #c9a84c;
+    font-size: 11px;
+    margin-top: 3px;
+    flex-shrink: 0;
   }
-  .qr-frame {
-    border: 2px solid rgba(201,148,58,0.45);
+  .url-box {
+    background: rgba(201,168,76,0.08);
+    border: 0.5px solid rgba(201,168,76,0.3);
     border-radius: 8px;
-    padding: 10px;
-    background: var(--navy-mid);
-  }
-  .qr-frame img {
-    display: block;
-    border-radius: 4px;
-  }
-  .qr-label {
-    font-size: 0.6em;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gold);
-    text-align: center;
-  }
-  .qr-url {
-    font-size: 0.48em;
-    color: var(--text-muted);
-    text-align: center;
-    font-family: 'Source Sans 3', sans-serif;
+    padding: 10px 14px;
+    font-size: 0.78em;
+    color: #c9a84c;
     letter-spacing: 0.02em;
-    max-width: 220px;
-    line-height: 1.4;
     word-break: break-all;
+    line-height: 1.6;
   }
-  .divider {
-    width: 1px;
-    height: 160px;
-    background: rgba(201,148,58,0.2);
-    align-self: center;
-  }
-  .presenter {
-    position: absolute;
-    bottom: 28px;
-    left: 0; right: 0;
-    text-align: center;
-    font-size: 0.5em;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-  }
-  .presenter strong {
-    color: var(--gold);
-    font-weight: 600;
+  .url-box .url-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(201,168,76,0.6);
+    margin-bottom: 4px;
+    font-family: 'Source Sans 3', sans-serif;
   }
 </style>
 </head>
 <body>
-<div class="slide">
-  <div class="overline">Lithium in Primary Care &nbsp;·&nbsp; Grand Rounds</div>
-  <h1>Slides &amp; Companion Resources</h1>
-  <div class="tagline">Scan to access or visit the URLs below</div>
+<div class="stage">
 
-  <div class="qr-row">
-    <div class="qr-block">
-      <div class="qr-frame">
-        <img src="data:image/png;base64,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" width="140" height="140" alt="QR code — slide deck">
-      </div>
-      <div class="qr-label">Interactive Slides</div>
-      <div class="qr-url">kimmccordmd.github.io/lithium-in-primary-care/lithium_grand_rounds_v45.html</div>
-    </div>
+  <div class="left">
+    <div id="qrcode"></div>
+    <div class="qr-label">Scan to access</div>
+  </div>
 
-    <div class="divider"></div>
-
-    <div class="qr-block">
-      <div class="qr-frame">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCCAIAAADzel4SAAAKLUlEQVR4nO3dsW00yRVGUVFYl4D8PwPGoaQUgZJSUApB7hqLwmovH1518xx/Znqaw4t2PtTH56+vvwHwV/19+wIAnk1GARIZBUhkFCCRUYBERgESGQVIZBQgkVGAREYBEhkFSGQUIJFRgERGARIZBUhkFCCRUYBERgESGQVIfisv/s+//vFNl3GLf/77v3/5tXN343xV58+d+0blqu409422flflc8+e+Pc9K/fK0yhAIqMAiYwCJDIKkMgoQCKjAImMAiQyCpDIKECSVkxncwuKoqwvtnZKc+7comytieb2YMXc3Zj7vu/73z/zNAqQyChAIqMAiYwCJDIKkMgoQCKjAImMAiQyCpAMrpjO3rcIKmuTubtx5zvfuXI52zrz6uyJu6z3/e97GgVIZBQgkVGAREYBEhkFSGQUIJFRgERGARIZBUjWVkzvs7VymTurp3jiuuZs7qru/Avy53kaBUhkFCCRUYBERgESGQVIZBQgkVGAREYBEhkFSKyYvs0Ttzd3Lq/OtjY/W8ur9+3B3sfTKEAiowCJjAIkMgqQyChAIqMAiYwCJDIKkMgoQLK2YrKv+PO27lVZBD3x71v2QlvnZb3vPj+Rp1GAREYBEhkFSGQUIJFRgERGARIZBUhkFCCRUYBkcMU0dyrOE82tXLz2u2wtkc6eeJ9/2v++p1GAREYBEhkFSGQUIJFRgERGARIZBUhkFCCRUYAkrZjed6bKWfm+WxuYOVubnydujeZeu+WJ1zzH0yhAIqMAiYwCJDIKkMgoQCKjAImMAiQyCpDIKEDy8fnra+WD33cOzNw1by1GnritmuNMpN974ipv7v/I0yhAIqMAiYwCJDIKkMgoQCKjAImMAiQyCpDIKECSzmKaU3YdW2uirSXS1jU/cXlVvtETz54q5r7R+/5DPY0CJDIKkMgoQCKjAImMAiQyCpDIKEAiowCJjAIk6SwmJ718l63v+8St0ZytndL7/vp3nodmxQRwKRkFSGQUIJFRgERGARIZBUhkFCCRUYBERgGSS89immOL8nvv2+2UuzH32jtPLpq7qjt/OXOrLU+jAImMAiQyCpDIKEAiowCJjAIkMgqQyChAIqMAydpZTM7b+S5zy407d0rlc8/uPOPrzl/Onf8LWzyNAiQyCpDIKEAiowCJjAIkMgqQyChAIqMAiYwCJINnMW2tL87et56ae+2dO5at84XO5v5Gd26rzu7cKc3t/TyNAiQyCpDIKEAiowCJjAIkMgqQyChAIqMAiYwCJIMrprOtc37u3ISUq3riiTpze5KzJ77zlrnfZHHnffY0CpDIKEAiowCJjAIkMgqQyChAIqMAiYwCJDIKkKytmO7ck8yta7be+Wxu43TnLuvODdvZ1g5ta4l053rqzNMoQCKjAImMAiQyCpDIKEAiowCJjAIkMgqQyChAMrhi2joj6E7ORPqud/5p9+rszk3XnXdjjqdRgERGARIZBUhkFCCRUYBERgESGQVIZBQgkVGAJK2Y3rfMmdt13HlVd656tvZCd56XdVauautMpPfdSU+jAImMAiQyCpDIKEAiowCJjAIkMgqQyChAIqMAycfnr6/ta/gDP20FMefORdDZned0WZp91+fOKX8jKyaANTIKkMgoQCKjAImMAiQyCpDIKEAiowCJjAIkgyumrbOY7nTnqmfrPt95jtNPu5Nbrz174l/Q0yhAIqMAiYwCJDIKkMgoQCKjAImMAiQyCpDIKEDyW3nx3IkrW5ufJ64vzp54btX7fld32jqLae5zt7ZknkYBEhkFSGQUIJFRgERGARIZBUhkFCCRUYBERgGSdBbTnaembO2Unuh9JwjNufOX877/sjlz1+xpFCCRUYBERgESGQVIZBQgkVGAREYBEhkFSGQUIElnMc2ZW1Dcub544ppoy533assTd0rv+//1NAqQyChAIqMAiYwCJDIKkMgoQCKjAImMAiQyCpCkFdPW1uhsa+fwvm+0tTZ54mlLzkT6Lk/8Rp5GARIZBUhkFCCRUYBERgESGQVIZBQgkVGAREYBkrRimtsbzJ30MreQuXO3874ThM7KfX7iauvOM5HO7lwiFZ5GARIZBUhkFCCRUYBERgESGQVIZBQgkVGAREYBksGzmO60tUW5czEyd0JU8cRlztnWluzOu3HmLCaAH0dGARIZBUhkFCCRUYBERgESGQVIZBQgkVGAZO0spq19xdY1F1trk7k10ZY7f7F3/urmbP3/zvE0CpDIKEAiowCJjAIkMgqQyChAIqMAiYwCJDIKkHx8/voaeus7dyx3rj62thlzpzyVz73znec+94knJhXvW3x5GgVIZBQgkVGAREYBEhkFSGQUIJFRgERGARIZBUjWzmKae+fza+d2O0/cz/jc7/rcolzz1irvzruxxdMoQCKjAImMAiQyCpDIKEAiowCJjAIkMgqQyChAklZMTzwlZu6a57YoW7udsyde89mdv9itk5ru3Eedr2rrN+lpFCCRUYBERgESGQVIZBQgkVGAREYBEhkFSGQUIPn4/PX1l1+8tZF44jkw7ztBaM7WMsc5Xd/12rM7f5NWTABrZBQgkVGAREYBEhkFSGQUIJFRgERGARIZBUgGz2I6+2mnxGy985wnXtVPO9do63ywOXdeladRgERGARIZBUhkFCCRUYBERgESGQVIZBQgkVGAJK2Yts6u2Tph5s6FzJ0n28ztsu7csZz9tHONtmytxTyNAiQyCpDIKEAiowCJjAIkMgqQyChAIqMAiYwCJB+fv762r+Ex7tyibK165hYjd97nOz3xBLCtFeLc9/U0CpDIKEAiowCJjAIkMgqQyChAIqMAiYwCJDIKkKydxXSnrbNcip+2RSnmFl93ft857/tGhadRgERGARIZBUhkFCCRUYBERgESGQVIZBQgkVGAJK2Yzu5cMswtr+Y2MMXcVf20v29x53qqeOI6bo6nUYBERgESGQVIZBQgkVGAREYBEhkFSGQUIJFRgGRwxXT2xH1FeeetfcXW6qO889YebO6a71x8nd35i72Tp1GAREYBEhkFSGQUIJFRgERGARIZBUhkFCCRUYBkbcX0Plu7nTllmXPnmmjLnecL3XkC2BN5GgVIZBQgkVGAREYBEhkFSGQUIJFRgERGARIZBUismP4PTzydZu6MoDvXNXf+jc5XtXUn5868mrsbd57U5GkUIJFRgERGARIZBUhkFCCRUYBERgESGQVIZBQgWVsx3blGOCvbjDt3HVunLZ3Nfd8791F3rtTmbG2r5ngaBUhkFCCRUYBERgESGQVIZBQgkVGAREYBEhkFSAZXTFun4tzpziXS1hlBW9632pq7qju/752f62kUIJFRgERGARIZBUhkFCCRUYBERgESGQVIZBQg+fj89bV9DQAP5mkUIJFRgERGARIZBUhkFCCRUYBERgESGQVIZBQgkVGAREYBEhkFSGQUIJFRgERGARIZBUhkFCCRUYBERgGS/wEkQXjy8t1tIAAAAABJRU5ErkJggg==" width="140" height="140" alt="QR code — resources">
-      </div>
-      <div class="qr-label">All Resources</div>
-      <div class="qr-url">kimmccordmd.github.io/lithium-in-primary-care</div>
+  <div class="right">
+    <div class="pre-title">Slides &amp; Companion Resources</div>
+    <h1>Lithium in <em>Primary Care</em></h1>
+    <div class="rule"></div>
+    <ul class="resource-list">
+      <li>Full interactive slide deck</li>
+      <li>Lithium companion prescriber reference</li>
+      <li>Monitoring protocol &amp; sick day rules</li>
+      <li>Clinical decision tree — complex depression</li>
+      <li>Population math widget</li>
+    </ul>
+    <div class="url-box">
+      <div class="url-label">Direct link</div>
+      https://kimmccordmd.github.io/lithium-in-primary-care/lithium_grand_rounds_v45.html
     </div>
   </div>
 
-  <div class="presenter"><strong>Kimberly J. McCord, MD</strong> &nbsp;·&nbsp; Med-Peds · Primary Care Psychiatry · Trinity Health</div>
 </div>
+
+<script>
+new QRCode(document.getElementById('qrcode'), {
+  text: 'https://kimmccordmd.github.io/lithium-in-primary-care/lithium_grand_rounds_v45.html',
+  width: 180,
+  height: 180,
+  colorDark: '#0d1b2a',
+  colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.M
+});
+</script>
 </body>
 </html>

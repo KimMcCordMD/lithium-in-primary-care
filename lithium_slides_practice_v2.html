@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithium in Primary Care Psychiatry</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #0f1117;
+    color: #e8e6df;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ---- SLIDE SHELL ---- */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 36px 48px 28px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ---- HEADER ---- */
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+  .slide-title {
+    font-size: 17px;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    color: #e8e6df;
+    line-height: 1.3;
+    max-width: 72%;
+  }
+  .slide-title strong {
+    font-size: 20px;
+    display: block;
+    margin-bottom: 3px;
+    color: #fff;
+  }
+  .slide-meta {
+    text-align: right;
+    font-size: 11px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  /* ---- CHART AREA ---- */
+  .chart-wrap {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+  }
+  .chart-wrap canvas {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* ---- LEGEND ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-top: 10px;
+    flex-shrink: 0;
+  }
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #aaa;
+  }
+  .leg-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- TOGGLE BUTTONS ---- */
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .tog {
+    padding: 4px 12px;
+    font-size: 11px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .tog:hover { border-color: #888; color: #ddd; }
+  .tog.active {
+    background: #1a6b9a;
+    border-color: #1a6b9a;
+    color: #fff;
+  }
+
+  /* ---- FOOTNOTE ---- */
+  .footnote {
+    font-size: 10px;
+    color: #555;
+    margin-top: 8px;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+
+  /* ---- NAV ---- */
+  .nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #aaa;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  .nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .nav-dots { display: flex; gap: 8px; }
+  .nav-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #444;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-dot.active { background: #5a9fd4; }
+
+  /* ---- HARM ZONE LABEL ---- */
+  .harm-label {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    font-size: 10px;
+    color: rgba(226,75,74,0.6);
+    pointer-events: none;
+  }
+
+  /* ---- NOTE BOX ---- */
+  .note-box {
+    background: rgba(26,107,154,0.12);
+    border-left: 2px solid #1a6b9a;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: #8bb8d4;
+    line-height: 1.55;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ========== SLIDE 1 ========== -->
+  <div class="slide" id="slide-0">
+    <div class="slide-header">
+      <div class="slide-title">
+        <strong>Patient-years of evidence for lithium suicide prevention</strong>
+        Bipolar disorder · Unipolar depression · TRD · Mixed / recurrent MDD
+      </div>
+      <div class="slide-meta">
+        Cipriani 2013 · Baldessarini 2006<br>
+        Katz 2022 JAMA Psychiatry (negative)<br>
+        Nabi 2022 · Ghaemi rebuttal 2024<br>
+        <span style="color:#E24B4A">⚠ hover red bubbles for controversy</span>
+      </div>
+    </div>
+
+    <div class="btn-row" id="s1-btns">
+      <button class="tog active" onclick="s1View('rr',this)">OR / RR of suicide</button>
+      <button class="tog" onclick="s1View('evidence',this)">GRADE evidence quality</button>
+      <button class="tog" onclick="s1View('withRecent',this)">+ Recent meta-analyses (2024–2025)</button>
+      <button class="tog" onclick="s1View('trueScale',this)">True scale — all studies</button>
+    </div>
+
+    <div class="legend">
+      <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Bipolar / any mood (favorable)</span>
+      <span class="leg"><span class="leg-dot" style="background:#378ADD"></span>Unipolar depression</span>
+      <span class="leg"><span class="leg-dot" style="background:#BA7517"></span>Mixed diagnoses</span>
+      <span class="leg"><span class="leg-dot" style="background:#E24B4A;opacity:.7"></span>⚠ Negative / contested</span>
+      <span class="leg"><span class="leg-dot" style="background:#5DCAA5"></span>✓ Tondo &amp; Baldessarini 2024 (sig.)</span>
+      <span class="leg"><span class="leg-dot" style="background:#C8980A"></span>~ McIntyre 2025 (non-sig., favorable)</span>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="s1chart"></canvas>
+    </div>
+
+    <div id="s1detail" style="min-height:52px;background:rgba(26,107,154,0.13);border-left:3px solid #1a6b9a;border-radius:0 6px 6px 0;padding:8px 13px;font-size:11px;color:#8bb8d4;line-height:1.6;margin:6px 0 4px;flex-shrink:0;"><span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span></div>
+
+    <div class="footnote">
+      Bubble area proportional to patient-years. X-axis: OR / RR of suicide vs comparator (lower = lithium more protective).
+      Y-axis: composite evidence quality. Hover for study details.
+      "Recent meta-analyses" adds Katz VA 2022 · Nabi 2022 · Tondo &amp; Baldessarini 2024 · McIntyre 2025.
+      "True scale" shows all studies with bubble area mathematically proportional to actual patient-years — bipolar registry bubble at r:84 is 103× the area of Nabi 2022.
+      GRADE quality scoring framework: Guyatt GH, Oxman AD, Vist GE, et al. GRADE: an emerging consensus on rating quality of evidence and strength of recommendations. <em>BMJ.</em> 2008;336(7650):924–926. doi:10.1136/bmj.39489.470347.AD
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 2 ========== -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-header">
+      <div class="slide-title">
+        <strong>TRD / DTD augmentation — effect size, evidence, and risk-benefit</strong>
+        Anchored to Vázquez, Bahji, Undurraga, Tondo &amp; Baldessarini 2021
+      </div>
+      <div class="slide-meta">
+        Vázquez et al. 2021 <em>J Psychopharmacol</em> 35:890–900<br>
+        NNT: Li=9 · Esk=5 · SGA~5<br>
+        NNH/NNT: Li=1.80 · Esk=0.71 · SGA=0.45
+      </div>
+    </div>
+
+    <div class="note-box" id="s2-note">
+      ★ The <strong>Risk-benefit ratio</strong> view shows lithium as the only agent where NNH/NNT &gt;1.0 — meaning you must harm more patients than you help to cancel out the benefit. Esketamine=0.71, SGAs=0.45 (harms outpace benefits at population level).
+    </div>
+
+    <div class="btn-row" id="s2-btns">
+      <button class="tog active" onclick="s2View('response',this)">Response / remission (NNT)</button>
+      <button class="tog" onclick="s2View('nnhRatio',this)">Risk-benefit ratio (NNH/NNT) ★</button>
+      <button class="tog" onclick="s2View('onset',this)">Speed of onset</button>
+      <button class="tog" onclick="s2View('durability',this)">Durability</button>
+    </div>
+
+    <div class="legend">
+      <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Lithium augmentation</span>
+      <span class="leg"><span class="leg-dot" style="background:#7F77DD"></span>Ketamine / esketamine</span>
+      <span class="leg"><span class="leg-dot" style="background:#378ADD"></span>SGA augmentation</span>
+      <span class="leg"><span class="leg-dot" style="background:#D85A30"></span>Pramipexole</span>
+      <span class="leg"><span class="leg-dot" style="background:#B4B2A9"></span>3rd-trial SSRI/SNRI</span>
+      <span class="leg"><span class="leg-dot" style="background:#D4537E"></span>Vortioxetine</span>
+      <span class="leg" style="margin-left:8px; color:#666; font-size:10px">Bubble size = patient-years</span>
+    </div>
+
+    <div class="chart-wrap" style="position:relative">
+      <canvas id="s2chart"></canvas>
+    </div>
+
+    <div id="s2detail" style="min-height:52px;background:rgba(26,107,154,0.13);border-left:3px solid #1a6b9a;border-radius:0 6px 6px 0;padding:8px 13px;font-size:11px;color:#8bb8d4;line-height:1.6;margin:6px 0 4px;flex-shrink:0;"><span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span></div>
+
+    <div class="footnote">
+      Lithium, esketamine, SGA NNT/NNH anchored to Vázquez et al. 2021. Pramipexole: Goldberg 2004, Cusin 2013.
+      Vortioxetine: Mahableshwarkar 2015. 3rd-trial SSRI: Rush 2006 STAR*D.
+      <span id="s2-axis-note"> | X-axis: NNT for response — lower = more patients helped.</span>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="prev-btn" onclick="goTo(current-1)">← Prev</button>
+  <div class="nav-dots">
+    <div class="nav-dot" onclick="goTo(0)"></div>
+    <div class="nav-dot active" onclick="goTo(1)"></div>
+  </div>
+  <button class="nav-btn" id="next-btn" onclick="goTo(current+1)" disabled>Next →</button>
+</div>
+
+<script>
+// ---- NAV ----
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.nav-dot');
+let current = 1;
+
+function goTo(n) {
+  if (n < 0 || n >= slides.length) return;
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').disabled = current === slides.length - 1;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+});
+
+// ---- SHARED HELPERS ----
+const DARK_GRID = 'rgba(255,255,255,0.06)';
+const DARK_TICK = '#666';
+
+function harmZonePlugin(xMax) {
+  return {
+    id: 'harmZone',
+    beforeDraw(chart) {
+      const ctx = chart.ctx, xs = chart.scales.x, ys = chart.scales.y;
+      if (!xs || !ys) return;
+      const x0 = xs.getPixelForValue(xs.min);
+      const x1 = xs.getPixelForValue(1.0);
+      const y1 = ys.getPixelForValue(ys.max);
+      const y2 = ys.getPixelForValue(ys.min);
+      ctx.save();
+      // Red zone = LEFT of 1.0 (unfavorable: harms outpace benefits)
+      ctx.fillStyle = 'rgba(226,75,74,0.07)';
+      ctx.fillRect(x0, y1, x1 - x0, y2 - y1);
+      // Dashed line at 1.0
+      ctx.strokeStyle = 'rgba(226,75,74,0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1, y2); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+  };
+}
+
+function labelPlugin() {
+  return {
+    id: 'bubbleLbls',
+    afterDatasetsDraw(chart) {
+      const ctx = chart.ctx;
+      ctx.save();
+      chart.data.datasets.forEach((ds, i) => {
+        const meta = chart.getDatasetMeta(i);
+        if (!meta.visible) return;
+        meta.data.forEach(el => {
+          const d = ds.data[0];
+          if (!d || !d.labelColor) return;
+          ctx.font = '500 11px Georgia, serif';
+          ctx.fillStyle = d.labelColor;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(d.shortLabel || d.agent || '', el.x, el.y - d.r - 6);
+        });
+      });
+      ctx.restore();
+    }
+  };
+}
+
+const yQualityLabels = ['','Very limited','Limited','Moderate','Good','Strong',''];
+
+// ========== SLIDE 1 ==========
+const s1Views = {
+  rr: {
+    xLabel: 'OR / RR of suicide (lower = lithium more protective)',
+    xMin: 0, xMax: 0.8,
+    yLabel: 'Strength of evidence',
+    data: [
+      { agent:'Bipolar / any mood — registry', x:0.13, y:5.0, r:42, labelColor:'#1D9E75', shortLabel:'Bipolar registry',
+        detail:'Scandinavian registry + Cipriani 2013 meta-analysis. ~180,000+ pt-yrs. RR ~0.13 for completed suicide. Strongest and most consistent signal — multiple independent cohorts, Karolinska/Nordic data.' },
+      { agent:'Bipolar — RCT pool (Cipriani 2013)', x:0.21, y:4.5, r:30, labelColor:'#1D9E75', shortLabel:'Cipriani 2013',
+        detail:'Cipriani et al. 2013 BMJ: RR ~0.13 for completed suicide vs placebo. ~40,000 pt-yrs. Note: excluded trials with zero suicide events — methodology later challenged by Nabi et al. 2022.' },
+      { agent:'Bipolar — early data', x:0.27, y:3.8, r:20, labelColor:'#1D9E75', shortLabel:'Bipolar early',
+        detail:'Geddes 2004, Goodwin 2003, Baldessarini/Tondo 2006. Early RCT and observational data. ~22,000 pt-yrs. Excluded from Nabi 2022 on grounds of pre-2000 publication — a key point of controversy.' },
+      { agent:'Unipolar depression', x:0.30, y:3.2, r:18, labelColor:'#378ADD', shortLabel:'Unipolar',
+        detail:'Lauterbach 2008 (prospective RCT augmentation); Müller-Oerlinghausen unipolar subset registry. ~8,000 pt-yrs. Real signal, smaller cohort. Not included in Nabi 2022.' },
+      { agent:'Mixed diagnoses (Cipriani 2013)', x:0.20, y:4.2, r:25, labelColor:'#BA7517', shortLabel:'Mixed dx',
+        detail:'Cipriani 2013 full meta-analysis pooled across diagnoses. RR ~0.13 for completed suicide. ~35,000 pt-yrs. Landmark meta-analysis — subsequently challenged by Nabi 2022 on methodological grounds (zero-event trial exclusion).' },
+    ],
+    bg: ['rgba(29,158,117,0.5)','rgba(29,158,117,0.4)','rgba(29,158,117,0.3)',
+         'rgba(55,138,221,0.5)','rgba(186,117,23,0.5)'],
+    bd: ['rgba(29,158,117,0.9)','rgba(29,158,117,0.7)','rgba(29,158,117,0.5)',
+         'rgba(55,138,221,0.9)','rgba(186,117,23,0.9)'],
+  }
+};
+
+// Extended view — adds recent meta-analyses (positive AND contested) toggled on together
+const controversyData = [
+  { agent:'Katz et al. 2022 — VA RCT (NEGATIVE)', x:1.00, y:4.2, r:6, labelColor:'#E24B4A', shortLabel:'Katz VA ⚠',
+    detail:'Katz et al. 2022 JAMA Psychiatry 79:24–32. N=519 veterans, ~500 pt-yrs. STOPPED FOR FUTILITY. No difference in suicide-related events between lithium and placebo added to usual care. Completed suicides: 1 lithium vs 3 placebo (2 deaths misclassified per IGSLI critique). Suicide attempts/events combined endpoint — no significant difference. Limitations: only 17% adherent; lithium levels subtherapeutic; excluded highest-risk patients; highly heterogeneous diagnoses; brief duration. Baldessarini commentary: results should be interpreted with caution, not as definitive negative evidence.' },
+  { agent:'Nabi et al. 2022 meta-analysis (CONTESTED)', x:1.10, y:3.8, r:9, labelColor:'#E24B4A', shortLabel:'Nabi 2022 ⚠',
+    detail:'Nabi, Stansfeld, Plöderl, Moncrieff et al. 2022 Epidemiology & Psychiatric Sciences. 12 RCTs, n=2,578 (1,278 lithium, 1,300 placebo/TAU), ~1,500–2,000 pt-yrs. Completed suicides: 0.2% lithium vs 0.4% placebo — OR=0.41 (CI 0.03–2.49), p=0.45, not significant. Suicide attempts: OR=1.13 (CI 0.60–2.14) nonsignificant. GHAEMI REBUTTAL (J Psychopharmacol 2024;38:597–603): excluded pre-2000 trials; inflated denominator with zero-event studies; misclassified placebo deaths. Corrected: RR=0.25, statistically significant.' },
+  { agent:'Tondo & Baldessarini 2024 — RCT meta-analysis (POSITIVE)', x:0.49, y:4.3, r:16, labelColor:'#5DCAA5', shortLabel:'Tondo & B 2024 ✓',
+    detail:'Tondo & Baldessarini 2024 Int J Bipolar Disord. 13 RCTs, n=3,836 (1,498 lithium vs 2,338 comparators), mean exposure 1.73yr, ~6,600 pt-yrs. Combined suicides + attempts: 14/1,498 lithium (0.94%) vs 36/2,338 comparators (1.54%). OR=0.491 (CI 0.278–0.864), p<0.01 — STATISTICALLY SIGNIFICANT. Rate per 100k person-exposure years: 540 lithium vs 810 comparator. Excluded uninformative zero-event trials (Ghaemi\'s recommended approach).' },
+  { agent:'McIntyre et al. 2025 — RCT meta-analysis (NEUTRAL)', x:0.73, y:3.6, r:11, labelColor:'#C8980A', shortLabel:'McIntyre 2025 ~',
+    detail:'Wang, Le, Wong, McIntyre et al. 2025 J Affect Disord. Searched 2013–2024, ~10 RCTs, ~3,000–4,000 patients, ~2,000–3,000 pt-yrs. Suicide attempts: OR=0.73 (CI 0.41–1.31) — nonsignificant reduction. Completed suicide: OR=0.61 (CI 0.25–1.48) — nonsignificant reduction. Directionally favorable on both endpoints. Conclusion: "failure to reach statistical significance likely results from type II error." Methodological limitations: small samples, diagnostic heterogeneity, subtherapeutic levels.' },
+];
+
+s1Views.withRecent = {
+  xLabel: 'OR / RR of suicide (lower = lithium more protective; right of 0.5 = contested zone)',
+  xMin: 0, xMax: 1.3,
+  yLabel: 'Strength of evidence',
+  data: [...s1Views.rr.data, ...controversyData],
+  bg: [...s1Views.rr.bg,
+       'rgba(226,75,74,0.35)','rgba(226,75,74,0.35)',
+       'rgba(93,202,165,0.45)','rgba(200,152,10,0.40)'],
+  bd: [...s1Views.rr.bd,
+       'rgba(226,75,74,0.85)','rgba(226,75,74,0.85)',
+       'rgba(15,110,86,0.85)','rgba(162,120,8,0.85)'],
+};
+
+// TRUE SCALE view — all bubbles, radii proportional to patient-years
+// Anchor: Tondo & B 2024 r:16 = ~6,600 pt-yrs → r = 16 × √(pt_yrs / 6600)
+s1Views.trueScale = {
+  xLabel: 'OR / RR of suicide — bubble area proportional to actual patient-years of evidence',
+  xMin: 0, xMax: 1.3,
+  yLabel: 'Strength of evidence',
+  data: [
+    { agent:'Bipolar / any mood — registry (TRUE SCALE)', x:0.13, y:5.0, r:84, labelColor:'#1D9E75', shortLabel:'Bipolar registry',
+      detail:'~180,000 pt-yrs. At true scale this bubble is 103× the area of Nabi 2022 — reflecting 103× more patient-years of evidence. The registry data dwarfs all RCT evidence combined. This is what the evidence base actually looks like.' },
+    { agent:'Cipriani 2013 RCT pool (TRUE SCALE)', x:0.21, y:4.5, r:39, labelColor:'#1D9E75', shortLabel:'Cipriani 2013',
+      detail:'~40,000 pt-yrs. Landmark RCT meta-analysis. Still large relative to the contested studies — approximately 23× the patient-years of Nabi 2022.' },
+    { agent:'Mixed diagnoses (Cipriani 2013)', x:0.20, y:4.2, r:37, labelColor:'#BA7517', shortLabel:'Mixed dx',
+      detail:'~35,000 pt-yrs. Cipriani 2013 pooled across diagnoses. OR ~0.13 for completed suicide.' },
+    { agent:'Bipolar — early data (TRUE SCALE)', x:0.27, y:3.8, r:29, labelColor:'#1D9E75', shortLabel:'Bipolar early',
+      detail:'~22,000 pt-yrs. Geddes 2004, Goodwin 2003, Baldessarini/Tondo 2006. Excluded from Nabi 2022 — these studies alone represent 12× the patient-years of Nabi.' },
+    { agent:'Unipolar depression (TRUE SCALE)', x:0.30, y:3.2, r:18, labelColor:'#378ADD', shortLabel:'Unipolar',
+      detail:'~8,000 pt-yrs. Lauterbach 2008; Müller-Oerlinghausen unipolar subset.' },
+    { agent:'Tondo & Baldessarini 2024 (TRUE SCALE)', x:0.49, y:4.3, r:16, labelColor:'#5DCAA5', shortLabel:'Tondo & B 2024 ✓',
+      detail:'~6,600 pt-yrs. Anchor bubble. 13 RCTs, OR=0.491, p<0.01. Statistically significant.' },
+    { agent:'McIntyre et al. 2025 (TRUE SCALE)', x:0.73, y:3.6, r:10, labelColor:'#C8980A', shortLabel:'McIntyre 2025 ~',
+      detail:'~2,500 pt-yrs. OR=0.61–0.73, nonsignificant but directionally favorable. J Affect Disord 2025.' },
+    { agent:'Nabi et al. 2022 (CONTESTED — TRUE SCALE)', x:1.10, y:3.8, r:8, labelColor:'#E24B4A', shortLabel:'Nabi 2022 ⚠',
+      detail:'~1,750 pt-yrs. The study claiming lithium does not prevent suicide — at true scale, this bubble represents less than 1% of the evidence in the bipolar registry bubble. OR=0.41 completed suicide (not significant); OR=1.13 attempts (not significant).' },
+    { agent:'Katz VA 2022 (NEGATIVE — TRUE SCALE)', x:1.00, y:4.2, r:4, labelColor:'#E24B4A', shortLabel:'Katz VA ⚠',
+      detail:'~500 pt-yrs. Stopped for futility. At true scale this is the smallest bubble on the chart — 360× smaller in area than the bipolar registry. Only 17% adherent; subtherapeutic levels.' },
+  ],
+  bg: ['rgba(29,158,117,0.5)','rgba(29,158,117,0.4)','rgba(186,117,23,0.5)',
+       'rgba(29,158,117,0.3)','rgba(55,138,221,0.5)',
+       'rgba(93,202,165,0.45)','rgba(200,152,10,0.40)',
+       'rgba(226,75,74,0.35)','rgba(226,75,74,0.35)'],
+  bd: ['rgba(29,158,117,0.9)','rgba(29,158,117,0.7)','rgba(186,117,23,0.9)',
+       'rgba(29,158,117,0.5)','rgba(55,138,221,0.9)',
+       'rgba(15,110,86,0.85)','rgba(162,120,8,0.85)',
+       'rgba(226,75,74,0.85)','rgba(226,75,74,0.85)'],
+};
+
+// GRADE-adapted evidence quality view
+// x-axis = GRADE composite score (0–10, normalized to 1–5 for display as 2–10)
+// y-axis = OR/RR effect size (lower = more protective)
+// Scores: Design(0-2) + Sample(0-2) + Effect(0-2) + Replication(0-2) + Adherence/bias(0-2) = max 10
+s1Views.evidence = {
+  xLabel: 'OR / RR of suicide (lower = more protective)',
+  xMin: 0, xMax: 1.4,
+  xTickCallback: val => val.toFixed(2),
+  xStepSize: 0.2,
+  yLabel: 'GRADE-adapted evidence quality score (higher = stronger)',
+  yMin: 0, yMax: 11,
+  yStepSize: 1,
+  yTickCallback: val => val % 1 === 0 ? val : '',
+  data: [
+    { agent:'Bipolar / any mood — registry', x:0.13, y:10.0, r:42, labelColor:'#1D9E75', shortLabel:'Bipolar registry',
+      detail:'GRADE score 10/10. Design: 2.0 (within-individual registry). Sample: 2.0 (>50k pt-yrs). Effect: 2.0 (RR 0.13, <0.2). Replication: 2.0 (≥3 independent Nordic cohorts). Adherence/bias: 2.0 (within-individual design eliminates between-person confounding). Highest possible score.' },
+    { agent:'Cipriani 2013 (RCT pool)', x:0.21, y:9.0, r:30, labelColor:'#1D9E75', shortLabel:'Cipriani 2013',
+      detail:'GRADE score 9/10. Design: 1.5 (RCT meta-analysis). Sample: 2.0 (>5k pt-yrs). Effect: 2.0 (RR 0.13). Replication: 2.0 (pooled multiple RCTs). Adherence/bias: 1.5 (blinded RCTs, some zero-event methodology concerns raised by Nabi 2022).' },
+    { agent:'Mixed dx (Cipriani 2013)', x:0.20, y:9.0, r:25, labelColor:'#BA7517', shortLabel:'Mixed dx',
+      detail:'GRADE score 9/10. Same meta-analysis as Cipriani bipolar pool, pooled across diagnoses. Design: 1.5. Sample: 2.0. Effect: 2.0 (RR 0.13). Replication: 2.0. Adherence/bias: 1.5.' },
+    { agent:'Bipolar — early data', x:0.27, y:8.0, r:20, labelColor:'#1D9E75', shortLabel:'Bipolar early',
+      detail:'GRADE score 8/10. Design: 1.5 (mixed RCT + observational). Sample: 1.5 (5–50k pt-yrs). Effect: 2.0 (RR ~0.27). Replication: 1.5 (2 independent cohorts). Adherence/bias: 1.5. Excluded from Nabi 2022 on pre-2000 publication grounds — a methodological controversy.' },
+    { agent:'Unipolar depression', x:0.30, y:8.0, r:18, labelColor:'#378ADD', shortLabel:'Unipolar',
+      detail:'GRADE score 8/10. Design: 1.5. Sample: 1.5. Effect: 1.5 (RR ~0.30). Replication: 2.0 — upgraded because Tiihonen 2017 Finnish registry (123,712 patients, within-individual) replicates the Lauterbach 2008 RCT and Müller-Oerlinghausen registry independently — three separate populations. Adherence/bias: 1.5.' },
+    { agent:'Tondo & Baldessarini 2024', x:0.49, y:7.5, r:16, labelColor:'#5DCAA5', shortLabel:'Tondo & B 2024 ✓',
+      detail:'GRADE score 7.5/10. Design: 1.5 (13-RCT meta-analysis). Sample: 1.5. Effect: 1.0 (OR 0.491, significant but >0.2). Replication: 2.0 (13 independent RCTs). Adherence/bias: 1.5. Statistically significant (p<0.01) — strongest recent controlled evidence for lithium antisuicidal effect.' },
+    { agent:'McIntyre et al. 2025', x:0.67, y:5.5, r:11, labelColor:'#C8980A', shortLabel:'McIntyre 2025 ~',
+      detail:'GRADE score 5.5/10. Design: 1.5. Sample: 1.0 (~2,500 pt-yrs). Effect: 0.5 (OR 0.61–0.73, directionally favorable but nonsignificant — likely type II error per authors). Replication: 1.5 (~10 RCTs). Adherence/bias: 1.0 (mixed adherence across included trials). J Affect Disord 2025.' },
+    { agent:'Nabi et al. 2022 (CONTESTED)', x:1.10, y:4.0, r:9, labelColor:'#E24B4A', shortLabel:'Nabi 2022 ⚠',
+      detail:'GRADE score 4/10. Design: 1.5. Sample: 1.0. Effect: 0.0 (OR 1.13 for attempts — unfavorable direction, nonsignificant). Replication: 1.0 (single meta-analysis). Adherence/bias: 0.5 (arbitrary pre-2000 trial exclusion per Ghaemi 2024 critique; zero-event inflation). Contested methodology. Epidemiol Psychiatr Sci 2022.' },
+    { agent:'Katz VA 2022 (NEGATIVE)', x:1.00, y:2.5, r:6, labelColor:'#E24B4A', shortLabel:'Katz VA ⚠',
+      detail:'GRADE score 2.5/10. Design: 1.5 (RCT — study design is fine). Sample: 0.5 (<500 pt-yrs). Effect: 0.0 (stopped for futility). Replication: 0.5 (single stopped trial). Adherence/bias: 0.0 (only 17% adherent; subtherapeutic levels; excluded highest-risk patients). JAMA Psychiatry 2022.' },
+  ],
+  bg: ['rgba(29,158,117,0.5)','rgba(29,158,117,0.4)','rgba(186,117,23,0.5)',
+       'rgba(29,158,117,0.3)','rgba(55,138,221,0.5)',
+       'rgba(93,202,165,0.45)','rgba(200,152,10,0.40)',
+       'rgba(226,75,74,0.35)','rgba(226,75,74,0.35)'],
+  bd: ['rgba(29,158,117,0.9)','rgba(29,158,117,0.7)','rgba(186,117,23,0.9)',
+       'rgba(29,158,117,0.5)','rgba(55,138,221,0.9)',
+       'rgba(15,110,86,0.85)','rgba(162,120,8,0.85)',
+       'rgba(226,75,74,0.85)','rgba(226,75,74,0.85)'],
+};
+
+let s1chart = null;
+let s1currentView = 'rr';
+function buildS1(view) {
+  s1currentView = view;
+  const v = s1Views[view];
+  const datasets = v.data.map((d, i) => ({
+    label: d.agent,
+    backgroundColor: v.bg[i],
+    borderColor: v.bd[i],
+    borderWidth: 1.5,
+    data: [{ x: d.x, y: d.y, r: d.r, labelColor: d.labelColor, shortLabel: d.shortLabel,
+              detail: d.detail, agent: d.agent }]
+  }));
+  if (s1chart) s1chart.destroy();
+  s1chart = new Chart(document.getElementById('s1chart'), {
+    type: 'bubble',
+    data: { datasets },
+    plugins: [labelPlugin()],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 24, right: 16, bottom: 8, left: 8 } },
+      scales: {
+        x: {
+          title: { display: true, text: v.xLabel, font: { size: 11 }, color: DARK_TICK },
+          min: v.xMin, max: v.xMax,
+          ticks: {
+            color: DARK_TICK, font: { size: 11 },
+            stepSize: v.xStepSize !== undefined ? v.xStepSize : undefined,
+            callback: v.xTickCallback !== undefined ? v.xTickCallback : undefined
+          },
+          grid: { color: DARK_GRID }
+        },
+        y: {
+          title: { display: true, text: v.yLabel, font: { size: 11 }, color: DARK_TICK },
+          min: v.yMin !== undefined ? v.yMin : 0,
+          max: v.yMax !== undefined ? v.yMax : 6,
+          ticks: {
+            stepSize: v.yStepSize !== undefined ? v.yStepSize : 1,
+            callback: v.yTickCallback !== undefined ? v.yTickCallback : val => yQualityLabels[val] || '',
+            color: DARK_TICK, font: { size: 10 }
+          },
+          grid: { color: DARK_GRID }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: function(context) {
+            const panel = document.getElementById('s1detail');
+            if (!panel) return;
+            if (context.tooltip.opacity === 0) {
+              panel.innerHTML = '<span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span>';
+              return;
+            }
+            const d = context.tooltip.dataPoints?.[0]?.raw;
+            if (!d) return;
+            panel.innerHTML = '<strong style="color:#c9a84c;">' + (d.agent||'') + '</strong> &nbsp;·&nbsp; <span style="color:#a8b8d0;">OR/RR: ' + d.x + '</span><br><span style="color:#8bb8d4;">' + d.detail + '</span>';
+          }
+        }
+      }
+    }
+  });
+}
+function s1View(v, btn) {
+  document.querySelectorAll('#s1-btns .tog').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildS1(v);
+}
+
+// ========== SLIDE 2 ==========
+const agentMeta = {
+  'Lithium':        { bg:'rgba(29,158,117,0.5)',  bd:'rgba(29,158,117,0.95)',  lbl:'#1D9E75' },
+  'Ketamine/esk':   { bg:'rgba(127,119,221,0.5)', bd:'rgba(127,119,221,0.95)', lbl:'#9F99E0' },
+  'SGAs':           { bg:'rgba(55,138,221,0.5)',  bd:'rgba(55,138,221,0.95)',  lbl:'#5A9FE0' },
+  'Aripiprazole':   { bg:'rgba(55,138,221,0.6)',  bd:'rgba(55,138,221,0.95)',  lbl:'#5A9FE0' },
+  'Pramipexole':    { bg:'rgba(216,90,48,0.5)',   bd:'rgba(216,90,48,0.95)',   lbl:'#D85A30' },
+  '3rd-trial SSRI': { bg:'rgba(180,178,169,0.45)',bd:'rgba(136,135,128,0.85)', lbl:'#888' },
+  'Vortioxetine':   { bg:'rgba(212,83,126,0.5)',  bd:'rgba(212,83,126,0.95)',  lbl:'#D4537E' },
+  'TMS':            { bg:'rgba(186,117,23,0.4)',  bd:'rgba(186,117,23,0.85)',  lbl:'#BA7517' },
+};
+
+const s2Views = {
+  response: {
+    xLabel: 'NNT for response — lower = more effective (x-axis reversed)',
+    xNote: 'NNT anchored to Vázquez et al. 2021 (J Psychopharmacol 2021;35:890–900). Pramipexole: Browning et al. 2025 Lancet Psychiatry; McAllister-Williams et al. 2025 J Psychopharmacol PAX-BD. TMS: Berlim 2014, Cole 2022.',
+    xMin: 0, xMax: 22, xReverse: true,
+    yLabel: 'Strength of evidence',
+    noteText: 'X-axis: NNT — <strong>lower = better.</strong> Anchored to Vázquez et al. 2021 for lithium (NNT=9), esketamine (NNT=5), SGAs (NNT~5). TMS estimated from separate literature — not in Vázquez 2021. ⚡ TMS is device-based and non-pharmacological; included for clinical comparison.',
+    data: [
+      { a:'Lithium',        x:9,  y:4.4, r:55, py:'~1M+ pt-yrs (RCT + registry)',
+        d:'NNT=9 (CI 5–106) — Vázquez et al. 2021. ~1M+ patient-years: Finnish registry 123,712 patients × 7.9yr (Tiihonen 2017), Finnish bipolar 18,018 × 7yr (Lähteenvuo 2018), Swedish bipolar 105,495 × 15yr (Ermis 2025). Scale of evidence categorically larger than any other agent. Also uniquely carries antisuicidal data.' },
+      { a:'Ketamine/esk',   x:5,  y:3.4, r:15, py:'~5,500 pt-yrs',
+        d:'NNT=5 (CI 4–6) — Vázquez et al. 2021 (esketamine). Strongest acute effect size of pharmacological agents. FDA-approved intranasal formulation. Durability limited without maintenance dosing.' },
+      { a:'SGAs',           x:5,  y:4.9, r:40, py:'~45,000 pt-yrs',
+        d:'NNT~5 — Vázquez et al. 2021. Largest patient-years; most FDA approvals. Effect robust but NNH/NNT=0.45 — harms outpace benefits at population level. Large bubble reflects prescribing volume, not superiority.' },
+      { a:'Pramipexole',    x:4,  y:3.8, r:14, py:'~2,500 pt-yrs',
+        d:'NNT ~4–5. Browning et al. 2025 Lancet Psychiatry (unipolar TRD RCT): response 44% vs 16% placebo, remission 28% vs 8% (RR 3.94, p=0.003). PAX-BD McAllister-Williams et al. 2025 J Psychopharmacol (bipolar TRD RCT). Tundo et al. 2024 Biomedicines head-to-head vs aripiprazole (n=132): pramipexole response 76% vs aripiprazole 38% at 24 weeks. Only agent with placebo-controlled RCT data in both unipolar and bipolar TRD.' },
+      { a:'3rd-trial SSRI', x:18, y:3.6, r:18, py:'~8,000 pt-yrs',
+        d:'Estimated NNT ~18 from STAR*D Rush 2006: remission 14–16% at step 3. Large evidence base but sobering effect size. Undurraga & Baldessarini 2012: drug-placebo difference declines with successive trials.' },
+      { a:'Vortioxetine',   x:9,  y:2.6, r:11, py:'~3,500 pt-yrs',
+        d:'NNT ~7–10 estimated (Mahableshwarkar 2015, McIntyre 2014). Unique cognitive benefit signal (FOCUS trial). TRD-specific NNT not established; most data from general MDD populations.' },
+      { a:'TMS',            x:5,  y:3.8, r:20, py:'~6,000 pt-yrs RCT data',
+        d:'NNT ~4–6 for standard TMS in TRD (Berlim 2014 meta-analysis). Stanford SNT accelerated protocol NNT ~2–3 in small RCTs (Cole 2022). ⚡ Device-based — different modality from all pharmacological agents. No systemic side effect burden. Not in Vázquez 2021; estimated from TMS-specific literature.' },
+    ]
+  },
+  nnhRatio: {
+    xLabel: 'NNH/NNT risk-benefit ratio (higher = more favorable. Right of 1.0 = favorable)',
+    xNote: 'NNH/NNT for lithium, esketamine, SGAs: Vázquez et al. 2021. Li=1.80 (CI 1.25–10.60), esketamine=0.71, SGA=0.45. TMS: estimated — discontinuation ~5% in RCTs (Berlim 2014).',
+    xMin: 0, xMax: 3.5, xReverse: false,
+    yLabel: 'Strength of evidence',
+    noteText: '★ <strong>Lithium is the only pharmacological agent with NNH/NNT &gt;1.0</strong> — meaning you must harm more patients than you help before canceling the benefit. Esketamine=0.71, SGAs=0.45: harms accumulate faster than benefits. ⚡ TMS ratio estimated — device-based adverse events not directly comparable to pharmacological NNH/NNT methodology.',
+    data: [
+      { a:'Lithium',        x:1.80, y:4.4, r:55, py:'~1M+ pt-yrs (RCT + registry)',
+        d:'NNH/NNT=1.80 (CI 1.25–10.60) — Vázquez et al. 2021. Only pharmacological agent with ratio >1.0. The harm threshold is reached only after the benefit threshold is canceled.' },
+      { a:'Ketamine/esk',   x:0.71, y:3.4, r:15, py:'~5,500 pt-yrs',
+        d:'NNH/NNT=0.71 (CI 0.60–0.80) — Vázquez et al. 2021. Adverse events (dissociation, dizziness, nausea, somnolence) accumulate faster than benefits.' },
+      { a:'SGAs',           x:0.45, y:4.9, r:40, py:'~45,000 pt-yrs',
+        d:'NNH/NNT=0.45 (CI 0.17–0.77) — Vázquez et al. 2021. Most unfavorable ratio. Weight gain, metabolic effects, EPS, akathisia accumulate at roughly twice the rate of clinical benefit.' },
+      { a:'Pramipexole',    x:1.20, y:3.8, r:14, py:'~2,500 pt-yrs',
+        d:'NNH/NNT estimated ~1.2. Browning et al. 2025 RCT: 20% discontinuation due to adverse effects vs 5% placebo — higher than observational data suggested. Impulse control disorders reported in 2 patients — monitor. Slow titration critical. Ratio revised downward from prior estimate given RCT discontinuation signal.' },
+      { a:'3rd-trial SSRI', x:0.80, y:3.6, r:18, py:'~8,000 pt-yrs',
+        d:'NNH/NNT estimated <1.0 by step 3 STAR*D. Continued side effect exposure with sharply declining probability of benefit.' },
+      { a:'Vortioxetine',   x:1.20, y:2.6, r:11, py:'~3,500 pt-yrs',
+        d:'NNH/NNT estimated ~1.2. Generally well tolerated (mainly GI). Favorable ratio tentative; TRD-specific tolerability data limited.' },
+      { a:'TMS',            x:2.50, y:3.8, r:20, py:'~6,000 pt-yrs RCT data',
+        d:'⚡ NNH/NNT estimated ~2.5 — not formally calculated; device-based adverse events not comparable to pharmacological NNH methodology. Adverse events mild: scalp discomfort, headache; rarely seizure (<0.1%). No metabolic, sexual, or sedation burden. Discontinuation ~5% RCTs.' },
+    ]
+  },
+  onset: {
+    xLabel: 'Median days to meaningful response (lower = faster)',
+    xNote: 'Onset data: TMS standard protocol: Berlim 2014. Accelerated SNT: Cole 2022. Ketamine: Vázquez 2021. SSRI step 3: Rush 2006 STAR*D.',
+    xMin: -5, xMax: 40, xReverse: false,
+    yLabel: 'Strength of evidence',
+    noteText: 'Speed of onset. Ketamine/esketamine is the fastest pharmacological agent — hours to 72 hours. ⚡ TMS standard protocol: 2–6 weeks. Accelerated SNT (Stanford): 1–5 days — rivals ketamine. Access and cost currently limit SNT in most settings.',
+    data: [
+      { a:'Lithium',        x:21, y:4.4, r:55, py:'~1M+ pt-yrs (RCT + registry)',
+        d:'2–6 weeks typical; requires titration to 0.6–1.0 mEq/L. Vázquez 2021 notes mean trial duration shorter for lithium than comparators — may act faster than commonly assumed.' },
+      { a:'Ketamine/esk',   x:1,  y:3.4, r:15, py:'~5,500 pt-yrs',
+        d:'Response within hours to 72 hours. Fastest onset of any pharmacological intervention in psychiatry. Uniquely suited to acute suicidal crisis.' },
+      { a:'SGAs',           x:14, y:4.9, r:40, py:'~45,000 pt-yrs',
+        d:'1–3 weeks for augmentation effect. Aripiprazole and brexpiprazole typically 2–4 weeks; some SGAs faster for sleep and anxiety.' },
+      { a:'Pramipexole',    x:21, y:3.8, r:14, py:'~2,500 pt-yrs',
+        d:'~3–6 weeks; slow titration required. Effect continues building — Tundo 2024: response climbed from 64% at 12 weeks to 76% at 24 weeks, remission from 50% to 73%.' },
+      { a:'3rd-trial SSRI', x:29, y:3.6, r:18, py:'~8,000 pt-yrs',
+        d:'4–6 weeks minimum per adequate trial. Slow onset compounded by very low probability of response. Time cost is itself an argument against continued SSRI cycling.' },
+      { a:'Vortioxetine',   x:21, y:2.6, r:11, py:'~3,500 pt-yrs',
+        d:'2–4 weeks typical antidepressant onset. Cognitive benefits may emerge somewhat earlier.' },
+      { a:'TMS',            x:22, y:3.8, r:20, py:'~6,000 pt-yrs RCT data',
+        d:'⚡ Standard TMS: 2–6 weeks (5×/week for 4–6 weeks). Accelerated SNT (Stanford): 1–5 days (10 sessions/day × 5 days) — onset rivals ketamine. Access and cost limit accelerated protocols in most settings.' },
+    ]
+  },
+  durability: {
+    xLabel: 'Durability of sustained response (estimated weeks)',
+    xNote: 'Lithium: Davis 2006; Bauer 2000 AJP; Finnish registry. Aripiprazole: open-label 52-wk, no control arm. Pramipexole: Tundo observational series. TMS: Dunner 2014, Janicak 2010. Note: quetiapine durability data insufficient for inclusion — most controlled trials ≤8 weeks.',
+    xMin: -2, xMax: 72, xReverse: false,
+    yLabel: 'Strength of evidence',
+    noteText: 'Durability. SGAs: <strong>Aripiprazole</strong> shown — only SGA with no time window in Bai et al. 2025, but 52-week data is open-label only. Other SGAs (quetiapine, brexpiprazole, cariprazine) excluded — controlled trial durations ≤8 weeks; durability data insufficient. <strong>Pramipexole</strong> sits alongside lithium — 72–84% sustained response at 24 months (Tundo observational). ⚡ TMS durability limited without maintenance — similar to ketamine.',
+    data: [
+      { a:'Lithium',        x:52, y:4.4, r:55, py:'~1M+ pt-yrs (RCT + registry)',
+        d:'Most durable agent on this chart. Davis 2006: 36% relapse on lithium vs 75% placebo over 5 months–3 years (RCT). Bauer 2000: 0% relapse vs 47% placebo at 4 months (RCT). Finnish registry: hospitalization days 53/yr → 1.4/yr on lithium. ~1M+ patient-years — no other agent comes close in evidence volume.' },
+      { a:'Ketamine/esk',   x:10, y:3.4, r:15, py:'~5,500 pt-yrs',
+        d:'Effect wanes within 1–2 weeks without repeat dosing. Maintenance protocols (weekly/biweekly) under active study. NNH/NNT of 0.71 becomes more problematic if chronic repeat dosing is required.' },
+      { a:'Aripiprazole',   x:48, y:3.8, r:22, py:'~12,000 pt-yrs',
+        d:'52-week open-label data shows sustained improvement — but NO placebo or comparator arm. Bai 2025: only SGA without time window within 8-week RCT window. Durability beyond 8 weeks not established in controlled data.' },
+
+      { a:'Pramipexole',    x:52, y:3.8, r:14, py:'~2,500 pt-yrs',
+        d:'Tundo et al. observational: sustained response at 24 months 72–84% including patients who previously failed aripiprazole. Note: 24-month figure is observational, not RCT. Both 2025 RCTs (Browning, PAX-BD) are acute-phase trials only — controlled durability data still needed.' },
+      { a:'3rd-trial SSRI', x:20, y:3.6, r:18, py:'~8,000 pt-yrs',
+        d:'STAR*D: even when step 3 achieves remission, relapse within 12 months ~70%. Poor durability relative to time and effort invested.' },
+      { a:'Vortioxetine',   x:28, y:2.6, r:11, py:'~3,500 pt-yrs',
+        d:'Maintenance MDD data exists (relapse prevention RCT). TRD-specific durability data sparse. Cognitive benefits may be more durable than mood response.' },
+      { a:'TMS',            x:14, y:3.5, r:20, py:'~4,000 pt-yrs follow-up data',
+        d:'⚡ Without maintenance TMS: ~50–60% relapse within 6–12 months (Dunner 2014, Janicak 2010). With maintenance retreatment: sustained remission ~70% (Dunner 2014). Similar limitation to ketamine — both require ongoing retreatment. Maintenance TMS feasible but adds cost and time burden.' },
+    ]
+  }
+};
+
+let s2chart = null;
+function buildS2(view) {
+  const v = s2Views[view];
+  document.getElementById('s2-note').innerHTML = v.noteText;
+  document.getElementById('s2-axis-note').textContent = ' | ' + v.xNote;
+  const datasets = v.data.map(d => {
+    const key = d.a;
+    const m = agentMeta[key] || { bg:'rgba(128,128,128,0.4)', bd:'rgba(128,128,128,0.8)', lbl:'#888' };
+    return {
+      label: d.a,
+      backgroundColor: m.bg,
+      borderColor: m.bd,
+      borderWidth: 1.5,
+      data: [{ x: d.x, y: d.y, r: d.r, agent: d.a, labelColor: m.lbl,
+               shortLabel: d.a === 'TMS' ? '⚡ TMS' : d.a,
+               py: d.py, detail: d.d }]
+    };
+  });
+
+  const extraPlugins = [];
+  if (view === 'nnhRatio') extraPlugins.push(harmZonePlugin());
+
+  if (s2chart) s2chart.destroy();
+  s2chart = new Chart(document.getElementById('s2chart'), {
+    type: 'bubble',
+    data: { datasets },
+    plugins: [labelPlugin(), ...extraPlugins],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 24, right: 16, bottom: 8, left: 8 } },
+      scales: {
+        x: {
+          title: { display: true, text: v.xLabel, font: { size: 11 }, color: DARK_TICK },
+          min: v.xMin, max: v.xMax,
+          reverse: v.xReverse || false,
+          ticks: { color: DARK_TICK, font: { size: 11 } },
+          grid: { color: DARK_GRID }
+        },
+        y: {
+          title: { display: true, text: v.yLabel, font: { size: 11 }, color: DARK_TICK },
+          min: 0, max: 6,
+          ticks: { stepSize: 1, callback: v => yQualityLabels[v] || '', color: DARK_TICK, font: { size: 10 } },
+          grid: { color: DARK_GRID }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: function(context) {
+            const panel = document.getElementById('s2detail');
+            if (!panel) return;
+            if (context.tooltip.opacity === 0) {
+              panel.innerHTML = '<span style="color:#555;font-style:italic;">← Hover any bubble to see full study details here</span>';
+              return;
+            }
+            const d = context.tooltip.dataPoints?.[0]?.raw;
+            if (!d) return;
+            panel.innerHTML = '<strong style="color:#c9a84c;">' + (d.agent||'') + '</strong> &nbsp;·&nbsp; <span style="color:#a8b8d0;">Patient-years: ' + (d.py||'') + '</span><br><span style="color:#8bb8d4;">' + d.detail + '</span>';
+          }
+        }
+      }
+    }
+  });
+}
+
+function s2View(v, btn) {
+  document.querySelectorAll('#s2-btns .tog').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildS2(v);
+}
+
+// ---- INIT ----
+buildS1('rr');
+buildS2('response');
+
+// Rebuild charts when slides become visible (avoids zero-size canvas issue)
+const observer = new MutationObserver(mutations => {
+  mutations.forEach(m => {
+    if (m.target.classList.contains('active')) {
+      if (m.target.id === 'slide-0') buildS1('rr');
+      if (m.target.id === 'slide-1') buildS2('response');
+    }
+  });
+});
+slides.forEach(s => observer.observe(s, { attributes: true, attributeFilter: ['class'] }));
+</script>
+</body>
+</html>

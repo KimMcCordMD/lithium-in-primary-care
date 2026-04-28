@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lithium — Suicide Risk</title>
+<style>
+:root {
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --text: #1a1c22;
+  --muted: #5a5c66;
+  --border: rgba(0,0,0,0.09);
+  --blue: #185FA5;
+  --blue-light: rgba(24,95,165,0.08);
+  --blue-mid: rgba(24,95,165,0.22);
+  --gold: #9A7B1A;
+  --gold-light: rgba(154,123,26,0.08);
+  --gold-mid: rgba(154,123,26,0.25);
+  --amber: #BA7517;
+  --amber-light: rgba(186,117,23,0.10);
+  --amber-mid: rgba(186,117,23,0.25);
+  --li: #1D9E75;
+  --li-light: rgba(29,158,117,0.10);
+  --li-mid: rgba(29,158,117,0.30);
+  --red: #A32D2D;
+  --red-light: rgba(163,45,45,0.08);
+  --red-mid: rgba(163,45,45,0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.slide {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 26px 30px 18px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.title-block h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.title-block .sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 9px 0 14px;
+}
+
+/* ---- TENSION BANNER ---- */
+.tension-banner {
+  background: var(--blue-light);
+  border: 1px solid var(--blue-mid);
+  border-radius: 8px;
+  padding: 11px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tension-label {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tension-text {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ---- MAIN GRID ---- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+}
+
+.card-label {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 7px;
+  padding-bottom: 5px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.card-label.blue { color: var(--blue); }
+.card-label.gold { color: var(--gold); }
+.card-label.green { color: var(--li); }
+.card-label.amber { color: var(--amber); }
+
+.slist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slist li {
+  font-size: 11px;
+  color: var(--text);
+  padding: 3px 0 3px 13px;
+  position: relative;
+  line-height: 1.45;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.slist li:last-child { border-bottom: none; }
+
+.slist li:before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.slist li strong { color: var(--text); font-weight: 600; }
+.slist li em { color: var(--muted); font-style: italic; }
+
+/* ---- COMPARISON TABLE ---- */
+.compare-wrap {
+  margin-bottom: 10px;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 11px;
+}
+
+.compare-table th {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 6px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table th.col-metric { color: var(--muted); }
+.compare-table th.col-li { color: var(--blue); background: var(--blue-light); border-radius: 6px 6px 0 0; }
+.compare-table th.col-apap { color: var(--gold); background: var(--gold-light); border-radius: 6px 6px 0 0; }
+
+.compare-table td {
+  padding: 5px 12px;
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.compare-table td.col-metric {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.compare-table td.col-li {
+  background: var(--blue-light);
+  font-weight: 500;
+}
+
+.compare-table td.col-apap {
+  background: var(--gold-light);
+  font-weight: 500;
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+
+.compare-table .source-row td {
+  font-size: 9.5px;
+  color: var(--muted);
+  font-style: italic;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+/* ---- CLOSING LINE ---- */
+.closing {
+  background: var(--blue-light);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+  padding: 9px 14px;
+  margin-bottom: 10px;
+  font-size: 11.5px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.closing em { color: var(--muted); font-style: italic; }
+
+/* ---- FOOTNOTE ---- */
+.footnote {
+  font-size: 9.5px;
+  color: var(--muted);
+  font-family: 'Helvetica Neue', sans-serif;
+  border-top: 0.5px solid var(--border);
+  padding-top: 8px;
+  line-height: 1.55;
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="header">
+    <div class="title-block">
+      <h1>Lithium and Suicide Risk</h1>
+      <div class="sub">Addressing a common clinical concern</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- STATS BANNER -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:9px;padding:10px 13px;text-align:center;">
+      <div style="font-family:'Helvetica Neue',sans-serif;font-size:18px;font-weight:700;color:var(--blue);letter-spacing:-0.5px;">1.5M</div>
+      <div style="font-family:'Helvetica Neue',sans-serif;font-size:9.5px;color:var(--muted);margin-top:3px;">Attempts annually (US, 2023)</div>
+    </div>
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:9px;padding:10px 13px;text-align:center;">
+      <div style="font-family:'Helvetica Neue',sans-serif;font-size:18px;font-weight:700;color:var(--blue);letter-spacing:-0.5px;">49,000</div>
+      <div style="font-family:'Helvetica Neue',sans-serif;font-size:9.5px;color:var(--muted);margin-top:3px;">Deaths annually (US, 2023)</div>
+    </div>
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:9px;padding:10px 13px;text-align:center;grid-column:span 2;">
+      <div style="font-family:'Helvetica Neue',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--amber);margin-bottom:7px;padding-bottom:5px;border-bottom:0.5px solid var(--border);">Annual Suicide Risk</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:4px;">
+        <div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:16px;font-weight:700;color:var(--muted);">0.014%</div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:9px;color:var(--muted);margin-top:2px;">Baseline</div>
+        </div>
+        <div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:16px;font-weight:700;color:var(--amber);">0.45%</div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:9px;color:var(--muted);margin-top:2px;">With MDD</div>
+        </div>
+        <div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:16px;font-weight:700;color:var(--red);">1.0%</div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:9px;color:var(--muted);margin-top:2px;">With Bipolar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TENSION BANNER -->
+  <div class="tension-banner">
+    <div class="tension-label">The concern</div>
+    <div class="tension-text">We routinely prescribe medications with lethal overdose potential. We manage that risk — we do not withhold the treatment.</div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th class="col-metric"></th>
+          <th class="col-li">Lithium</th>
+          <th class="col-apap">Acetaminophen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-metric">Poison control exposures (2023)</td>
+          <td class="col-li">3,324</td>
+          <td class="col-apap">~80,000</td>
+        </tr>
+        <tr>
+          <td class="col-metric">ED visits annually</td>
+          <td class="col-li">—</td>
+          <td class="col-apap">~56,000</td>
+        </tr>
+        <tr>
+          <td class="col-metric">Deaths</td>
+          <td class="col-li">7</td>
+          <td class="col-apap">~500</td>
+        </tr>
+        <tr>
+          <td class="col-metric">Intentional deaths</td>
+          <td class="col-li"><em>Not yet reported</em></td>
+          <td class="col-apap">250–350</td>
+        </tr>
+        <tr>
+          <td class="col-metric">Prescription required</td>
+          <td class="col-li">Yes</td>
+          <td class="col-apap">No</td>
+        </tr>
+        <tr class="source-row">
+          <td class="col-metric"></td>
+          <td class="col-li">Gummin et al., NPDS Annual Report 2023</td>
+          <td class="col-apap">CDC / NPDS estimates</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TWO CARDS -->
+  <div class="main-grid">
+
+    <div class="card">
+      <div class="card-label blue">Safer prescribing — if needed</div>
+      <ul class="slist">
+        <li>Dispense smaller quantities</li>
+        <li>Trusted person in the patient's life holds the medication</li>
+        <li>Same approach used with benzodiazepines, opioids, antihypertensives, warfarin</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label gold">The primary care perspective</div>
+      <ul class="slist">
+        <li>You know this patient — longitudinal relationship, established rapport</li>
+        <li>You are not meeting them for the first time</li>
+        <li>Clinical judgment applies — this is not a protocol decision</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    Lithium is the only mood agent with replicated evidence of suicide reduction. Most lithium toxicity is survivable with good management. Lethal outcomes are generally secondary to severe CNS effects with subsequent cardiovascular collapse.
+  </div>
+
+  <div class="footnote">
+    Lithium exposure data: Gummin DD et al. 2023 Annual Report of the National Poison Data System (NPDS). Outcomes: moderate in 1,290 cases, major in 167 cases, 7 deaths among 3,324 single exposures. Acetaminophen figures: CDC estimates; ~250–350 intentional fatalities annually. Acetaminophen available without prescription in any quantity.
+  </div>
+
+</div>
+</body>
+</html>
